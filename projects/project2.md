@@ -5,7 +5,10 @@ title: Reinforcement Learning in Control Systems
 
 # AI in healthcare: Medical image analysis
 
-This project explores the use of reinforcement learning to optimize decision-making in control systems.
+You can download the full report with detailed answers, including code snippets, here:
+
+[Download PDF](../assets/pdfs/Andres_Aranguren_assignment_2.pdf)
+
 
 ### Project Details:
 - **Technologies Used**: Python, OpenAI Gym, TensorFlow
