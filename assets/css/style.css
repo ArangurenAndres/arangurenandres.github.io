@@ -1,21 +1,160 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+/* General Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.8;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1.5rem;
+    background-color: #e0f7fa; /* Light blue background */
+    color: #333;
+}
+
+h1, h2, .section-title {
+    color: #2c3e50; /* A modern dark blue for main headings */
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    letter-spacing: 1.5px;
+}
+
+p, li {
+    color: #555; /* Neutral text color for readability */
+    font-size: 1.1em;
+    line-height: 1.6;
+}
+
+/* Profile Photo */
 .profile-photo {
     border-radius: 50%;
     width: 150px;
     height: 150px;
     object-fit: cover;
     margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Section Titles */
+.section-title {
+    font-size: 1.5rem;
+    color: #3498db;
+    margin-bottom: 0.5rem;
+    border-bottom: 2px solid #3498db;
+    display: inline-block;
+}
+
+/* Links */
+a {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+a:hover {
+    color: #1abc9c;
+    text-decoration: underline;
+}
+
+/* Lists */
+ul {
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+}
+
+li {
+    margin-bottom: 0.5rem;
+}
+
+/* Contact Section */
+.contact a {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: #3498db;
+    color: #fff;
+    border-radius: 5px;
+    text-transform: uppercase;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.contact a:hover {
+    background-color: #1abc9c;
+    color: #fff;
+}
+
+/* Summary and About Text */
+.about-text, .summary-text {
+    text-align: justify;
+}
+
+/* Footer */
+footer {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 0.9em;
+    color: #777;
+}
+
+/* Media Query for Responsiveness */
+@media (max-width: 768px) {
+    body {
+        padding: 1rem;
+    }
+
+    .section-title {
+        font-size: 1.2rem;
+    }
+
+    p, li {
+        font-size: 1em;
+    }
+}
+
+
+/* Navigation Bar */
+.navbar {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    background-color: #3498db;
+    border-radius: 10px 0 0 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.navbar a {
+    display: block;
+    padding: 10px 20px;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1em;
+    text-align: center;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navbar a:hover {
+    background-color: #1abc9c;
+    color: #fff;
+}
+
+/* Add active link styling */
+.navbar a.active {
+    background-color: #1abc9c;
+}
+
+/* Add margin to content to avoid overlapping with the navbar */
 body {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 1rem;
+    margin-right: 80px; /* Account for the navbar width */
 }
 
-h1, h2 {
-    color: #2c3e50;
+/* Responsiveness */
+@media (max-width: 768px) {
+    .navbar {
+        display: none; /* Hide navbar on small screens */
+    }
 }
-
-

@@ -7,13 +7,13 @@ title: Neural Network Implementation and Training
 
 You can download the full report with detailed answers, including code snippets, here:
 
-[Download PDF](../assets/pdfs/Andres_Aranguren_assignment_1.pdf)
+[Download PDF]()
 
 ---
 
 ## Project Overview
 
-This project focuses on building a simple neural network from scratch using Python and NumPy. The key objectives were to gain a deeper understanding of neural network operations, including forward and backward propagation, and to implement training on both synthetic data and the MNIST dataset.
+This project focuses on building a simple neural network from scratch using Python. The key objectives were to gain a deeper understanding of neural network operations, including forward and backward propagation, and to implement training on both synthetic data and the MNIST dataset, widely used for machine and deep learing models benchmarking.
 
 ---
 
