@@ -1,9 +1,11 @@
 /* Import Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
 /* General Styles */
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Inter', sans-serif;
     line-height: 1.8;
     max-width: 900px;
     margin: 0 auto;
@@ -11,6 +13,16 @@ body {
     background-color: #e0f7fa; /* Light blue background */
     color: #333;
 }
+
+/* Section Styles with Light Green Background, Margins, and Rounded Corners */
+section {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background-color: #d3f9d8; /* Light green background */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
+}
+
 
 h1, h2, .section-title {
     color: #2c3e50; /* A modern dark blue for main headings */
@@ -157,4 +169,9 @@ body {
     .navbar {
         display: none; /* Hide navbar on small screens */
     }
+}
+
+/* Add margin to content to avoid overlapping with the navbar */
+body {
+    margin-right: 80px; /* Account for the navbar width */
 }

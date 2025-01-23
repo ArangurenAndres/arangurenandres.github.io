@@ -6,6 +6,10 @@ title: About Me
 <!-- Link to the CSS file -->
 <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/style.css">
 
+<!-- Add Font Awesome Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+
 <!-- Navigation Bar -->
 <div class="navbar">
   <a href="#about" class="active">About</a>
@@ -25,23 +29,26 @@ title: About Me
   <strong>Email:</strong> <a href="mailto:aranguren.andres9712@gmail.com">aranguren.andres9712@gmail.com</a>
 </p>
 
-### <span class="section-title">Education</span>
+### <span class="section-title">Education <i class="fas fa-graduation-cap"></i></span>
 - **BSc. Biomedical Engineering**, Universidad de los Andes, Colombia  
 - **MSc. Data Science**, Università degli studi di Padova, Italy  
 - **MSc. Computer Science**, University of Leiden, Netherlands (Current)
 
-### <span class="section-title">Summary</span>
+
+### <span class="section-title">Summary <i class="fas fa-briefcase"></i></span>
+
 <p class="summary-text">
-  I am a Machine Learning Engineer with expertise in computer vision, deep learning, and AI model deployment. My professional background spans across multiple domains including industrial, medical, and agricultural applications. I have successfully led projects involving autoencoder-based models, transformer architectures, and AI-driven quality inspection tools. I thrive in collaborative and fast-paced environments, where I worked alongside diverse teams to deliver impactful results.
+    I am a Machine Learning Engineer with expertise in computer vision, deep learning, and AI model deployment. My professional background spans across multiple domains including industrial, medical, and agricultural applications. I have successfully led projects involving autoencoder-based models, transformer architectures, and AI-driven quality inspection tools. I thrive in collaborative and fast-paced environments, where I worked alongside diverse teams to deliver impactful results.
 </p>
 
-### <span class="section-title">Skills & Expertise</span>
+
+### <span class="section-title">Skills & Expertise  <i class="fas fa-cogs"></i></span>
 - **Programming Languages:** Python, JavaScript, TypeScript, R  
 - **Frameworks & Tools:** PyTorch, TensorFlow, React, Node.js, MLflow, Kubernetes  
 - **Cloud Platforms:** AWS, Azure, GCP  
 - **Specialized Areas:** Computer Vision, Deep Learning, CI/CD, Model Deployment  
 
-### <span class="section-title">Languages</span>
+### <span class="section-title">Languages  <i class="fas fa-language"></i></span>
 - **English:** Proficient  
 - **Spanish:** Native  
 - **Italian:** Native  
