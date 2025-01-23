@@ -2,13 +2,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-
 /* General Styles */
+
+
+
+
 body {
     font-family: 'Inter', sans-serif;
     line-height: 1.8;
-    max-width: 900px;
-    margin: 0 auto;
+    max-width: 1000px; /* Increased max width for wider display */
+    margin: 0 auto; /* Center the content horizontally */
     padding: 1.5rem;
     background-color: #e0f7fa; /* Light blue background */
     color: #333;
@@ -22,7 +25,6 @@ section {
     border-radius: 8px; /* Rounded corners */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow */
 }
-
 
 h1, h2, .section-title {
     color: #2c3e50; /* A modern dark blue for main headings */
@@ -46,7 +48,12 @@ p, li {
     object-fit: cover;
     margin-bottom: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transform: scale(1.1); /* Slight zoom */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
+
+
 
 /* Section Titles */
 .section-title {
@@ -88,7 +95,7 @@ li {
     border-radius: 5px;
     text-transform: uppercase;
     font-weight: bold;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .contact a:hover {
@@ -124,18 +131,17 @@ footer {
     }
 }
 
-
 /* Navigation Bar */
 .navbar {
     position: fixed;
     top: 50%;
     right: 0;
     transform: translateY(-50%);
-    background-color: #3498db;
     border-radius: 10px 0 0 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     z-index: 1000;
     overflow: hidden;
+    background: linear-gradient(90deg, #3498db, #1abc9c);
 }
 
 .navbar a {
@@ -147,6 +153,7 @@ footer {
     font-size: 1em;
     text-align: center;
     transition: background-color 0.3s ease, color 0.3s ease;
+    position: relative;
 }
 
 .navbar a:hover {
@@ -157,21 +164,14 @@ footer {
 /* Add active link styling */
 .navbar a.active {
     background-color: #1abc9c;
+    font-weight: bold;
 }
 
-/* Add margin to content to avoid overlapping with the navbar */
-body {
-    margin-right: 80px; /* Account for the navbar width */
-}
+
 
 /* Responsiveness */
 @media (max-width: 768px) {
     .navbar {
         display: none; /* Hide navbar on small screens */
     }
-}
-
-/* Add margin to content to avoid overlapping with the navbar */
-body {
-    margin-right: 80px; /* Account for the navbar width */
 }

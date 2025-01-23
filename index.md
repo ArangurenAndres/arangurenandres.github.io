@@ -22,7 +22,7 @@ title: About Me
   <img src="assets/images/jag.png" alt="My photo" style="width:150px; height:150px; border-radius:50%; object-fit:cover; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
 </div>
 
-## <span class="section-title">About Me</span>
+## <span class="section-title">About Me <i class="fas fa-user"></i> </span>
 <p class="about-text">
   <strong>Name:</strong> Andres Aranguren  
   <br>
@@ -48,7 +48,7 @@ title: About Me
 - **Cloud Platforms:** AWS, Azure, GCP  
 - **Specialized Areas:** Computer Vision, Deep Learning, CI/CD, Model Deployment  
 
-### <span class="section-title">Languages  <i class="fas fa-language"></i></span>
+### <span class="section-title">Languages <i class="fas fa-language"></i></span>
 - **English:** Proficient  
 - **Spanish:** Native  
 - **Italian:** Native  
