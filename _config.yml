@@ -1,0 +1,30 @@
+title: "My ML Portfolio"
+description: "A blog and portfolio to showcase my machine learning journey."
+baseurl: "" # Leave empty for root
+url: "https://yourusername.github.io"
+theme: minima
+
+
+# Navigation
+header_pages:
+  - index.md
+  - about.md
+  - projects.md
+  - blog.md
+
+
+collections:
+  projects:
+    output: true
+    permalink: /projects/:path/
+    
+
+# Socials (optional)
+github_username: yourusername
+linkedin_username: yourname
+email: your@email.com
+
+markdown: kramdown
+kramdown:
+  input: GFM
+  math_engine: mathjax
