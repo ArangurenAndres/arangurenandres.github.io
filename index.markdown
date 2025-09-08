@@ -4,31 +4,57 @@ title: "Home"
 permalink: /
 ---
 
-<div style="display: flex; flex-wrap: wrap; gap: 2rem; align-items: flex-start;">
+<header class="hero bg-gray-50 rounded-2xl text-center py-16 px-6">
+  <h1 class="text-4xl font-bold mb-2">Welcome</h1>
+  <p class="text-lg text-gray-600">My Machine Learning Blog</p>
 
-  <!-- LEFT: PROJECTS LIST (now wider) -->
-  <div style="flex: 3; min-width: 300px;">
+  <p class="max-w-2xl mx-auto mt-6 text-base text-gray-700 leading-relaxed">
+    Here I share projects, experiments, and ideas at the intersection of 
+    <span class="font-semibold">machine learning</span>, 
+    <span class="font-semibold">reinforcement learning</span>, 
+    <span class="font-semibold">robotics</span>, and 
+    <span class="font-semibold">computer vision</span>.
+  </p>
+  <ul class="max-w-xl mx-auto mt-8 space-y-3 text-left text-lg leading-relaxed">
+    <li>📌 <span class="font-semibold">Reinforcement Learning</span> — from DQNs on CartPole to Actor-Critic methods</li>
+    <li>🤖 <span class="font-semibold">Robotics</span> — Raspberry Pi LLM guided navigation in unknown environments</li>
+    <li>🎮 <span class="font-semibold">Game AI</span> — MCTS agents for Pacman Capture the Flag</li>
+    <li>🧠 <span class="font-semibold">Deep Learning</span> — neural networks, recommendation systems, generative models</li>
+  </ul>
+
+  <p class="mt-10 text-gray-500">Thanks for stopping by — I’ll keep adding new projects regularly!</p>
+</header>
+
+<div class="page-body">
+  <main class="content">
     {% assign sorted_projects = site.projects | sort: 'date' | reverse %}
-    {% for project in sorted_projects %}
-      <div style="margin-bottom: 2rem; padding: 1rem; background: #f9f9f9; border-radius: 8px;">
-      <!-- Optional Image Preview -->
-      {% if project.preview_image %}
-        <img src="{{ project.preview_image }}" alt="Preview" style="width: 100%; max-height: 200px; object-fit: cover;" />
-      {% endif %}
-        <h3><a href="{{ project.url }}">{{ project.title }}</a></h3>
-        <p style="color: #777;">{{ project.date | date: "%B %d, %Y" }}</p>
-        <p>{{ project.excerpt | strip_html | truncatewords: 40 }}</p>
-        <a href="{{ project.url }}" style="font-weight: bold;">Continue reading →</a>
+    <section id="projects">
+      <h2>Projects</h2>
+      <div class="projects-grid">
+        {% for project in sorted_projects %}
+          <article class="project-card">
+            {% if project.preview_image %}
+              <a href="{{ project.url }}">
+                <img src="{{ project.preview_image }}" alt="{{ project.title }}" />
+              </a>
+            {% endif %}
+            <h3><a href="{{ project.url }}">{{ project.title }}</a></h3>
+            <p class="muted">{{ project.date | date: "%B %d, %Y" }}</p>
+            <p>{{ project.excerpt | strip_html | truncatewords: 40 }}</p>
+            <a href="{{ project.url }}" class="read-more">Continue reading →</a>
+          </article>
+        {% endfor %}
       </div>
-    {% endfor %}
-  </div>
+    </section>
+  </main>
 
-  <!-- RIGHT: SIDEBAR -->
-  <div style="flex: 1; min-width: 200px; background: #fff; padding: 1rem; border-left: 1px solid #ccc;">
-    <img src="/assets/images/profile.png" alt="Andres Aranguren" style="max-width: 100%; border-radius: 10px;" />
-    <p>👋 I’m a machine learning engineer focused on deep reinforcement learning, generative models, and robotics.</p>
-    <p>Currently researching autonomous systems using policy gradients and model-based control.</p>
-    <p>🔗 <a href="https://github.com/yourusername" target="_blank">GitHub</a> | <a href="mailto:your@email.com">Email</a></p>
-  </div>
-
+  <aside class="sidebar">
+    <div class="about-card">
+      <img src="/assets/images/profile.png" alt="Andres Aranguren" class="about-photo" />
+      <h3>About me</h3>
+      <p>👋 I’m a machine learning engineer focused on deep reinforcement learning, generative models, and robotics.</p>
+      <p>Currently researching autonomous systems using policy gradients and model-based control.</p>
+      <p>🔗 <a href="https://github.com/yourusername" target="_blank">GitHub</a> | <a href="mailto:your@email.com">Email</a></p>
+    </div>
+  </aside>
 </div>
