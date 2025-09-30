@@ -18,7 +18,7 @@ permalink: /
   <ul class="max-w-xl mx-auto mt-8 space-y-3 text-left text-lg leading-relaxed">
     <li>📌 <span class="font-semibold">Reinforcement Learning</span> — from DQNs on CartPole to Actor-Critic methods</li>
     <li>🤖 <span class="font-semibold">Robotics</span> — Raspberry Pi LLM guided navigation in unknown environments</li>
-    <li>🎮 <span class="font-semibold">Game AI</span> — MCTS agents for Pacman Capture the Flag</li>
+    <li>🎮 <span class="font-semibold">Game AI</span> — MCTS agents for Pacman Capture the Flag / GANs for level generation, and level conditioning using RL agents</li>
     <li>🧠 <span class="font-semibold">Deep Learning</span> — neural networks, recommendation systems, generative models</li>
   </ul>
 

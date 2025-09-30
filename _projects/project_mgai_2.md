@@ -14,11 +14,10 @@ This project develops a vanilla MCTS agent and progressively augments it with he
 ## Abstract
 
 Monte Carlo Tree Search (MCTS) has demonstrated strong performance in deterministic and adversarial games. However, its vanilla form lacks context-awareness in complex multi-agent environments.  
-This project explores integrating **heuristic knowledge** into MCTS for the UC Berkeley Capture the Flag variant of Pacman.  
 
-Enhancements include:
+We explore integrating **heuristic knowledge** into MCTS for the UC Berkeley Capture the Flag variant of Pacman, introducing:
 - Progressive bias via heuristic-based action sorting  
-- Softmax-weighted rollouts for more informed simulations  
+- Softmax-weighted rollouts for more accurate simulations  
 - A specialized **defensive MCTS agent** for team coordination  
 
 Through **ablation studies** and a **tournament** (evaluated with win rates and TrueSkill scores), we show that heuristic-informed strategies significantly improve robustness and gameplay effectiveness.
@@ -27,30 +26,66 @@ Through **ablation studies** and a **tournament** (evaluated with win rates and 
 
 ## Introduction
 
-The UC Berkeley Capture the Flag variant of Pacman is a challenging **multi-agent adversarial environment**.  
-Two teams of agents must **steal food** from the opponent’s side while **defending their own territory**.  
+Monte Carlo Tree Search (MCTS) is widely used in domains with large branching factors where defining a good evaluation function is infeasible. Unlike Minimax, which explores uniformly, MCTS **balances exploration and exploitation** using policies such as UCB1.  
 
-MCTS provides a good foundation but requires **domain-specific adjustments**:  
-- Handling imperfect information  
-- Managing high branching factors  
-- Enabling coordination between offensive and defensive agents  
+We apply MCTS to the **UC Berkeley Capture the Flag variant of Pacman**, a challenging **multi-agent adversarial environment** where two teams of agents must steal food while defending their own territory.  
 
 ![Game Environment](/assets/mgai/assignment_2/mgai_2_pacman.png)  
 *Figure 1. Pacman Capture the Flag environment.*
 
 ---
 
+## Background
+
+MCTS operates in four stages:
+1. **Selection** – Traverses the tree using UCB1:  
+   \[
+   UCB1 = \bar{X_j} + 2C_p \sqrt{\frac{\ln n}{n_j}}
+   \]  
+   balancing exploitation and exploration.  
+2. **Expansion** – Adds a new child node for an unexplored action.  
+3. **Simulation** – Runs rollouts (random or heuristic-driven) to estimate outcomes.  
+4. **Backpropagation** – Updates visit counts and rewards along the path.  
+
+To adapt MCTS to Pacman CTF, we added:  
+- **Progressive Bias** – guiding expansion with heuristics  
+- **Softmax Rollouts** – probabilistic selection favoring promising states  
+
+---
+
 ## Methods
 
-We implemented a **vanilla MCTS agent** and progressively enhanced it with heuristic strategies:
+### Baselines
+- **Heuristic Reflex Agent**: Offensive agent collects food; defensive agent intercepts opponents.  
+- **Vanilla MCTS**: Uniform random rollouts with default hyperparameters:  
+  - Rollout depth: 10  
+  - Simulation epsilon (ε): 0.2  
+  - Exploration constant (Cp): 0.707  
 
-- **Baseline Heuristic Agent**: Reflex-based, with offensive and defensive roles  
-- **Vanilla MCTS**: Standard 4-phase loop (selection, expansion, simulation, backpropagation)  
-- **Heuristic State Evaluation**: Features include distance to food, carrying pellets, distance to home, ghost proximity  
-- **Untried Action Sorting**: Expansion biased toward promising actions  
-- **Softmax Rollouts**: Stochastic action selection weighted by heuristic scores  
-- **Rainbow Agent**: Combination of RAVE, weighted rollouts, and action sorting  
-- **Defensive Agent**: Pursues enemies in our territory or patrols strategically  
+### Domain Adaptations
+1. Perfect Information assumption (access to full game state)  
+2. Fixed time per move (0.5s budget)  
+3. Limited rollout depth  
+4. Removing STOP action from legal actions  
+5. Custom state evaluation with features:  
+   - Distance to food (+1.5)  
+   - Carrying pellets (+20.0)  
+   - Distance to home (+2.0)  
+   - Ghost proximity (−8.0)  
+6. ε-greedy simulation policy  
+7. Early return-to-base rule when carrying food  
+
+### Heuristic Enhancements
+- **Untried Action Sorting**: Chooses best successor via heuristic evaluation  
+- **Softmax Weighted Rollouts**:  
+  \[
+  P(a_i) = \frac{e^{s_i/\tau}}{\sum_j e^{s_j/\tau}}
+  \]  
+  biases simulations toward high-value states  
+- **Rainbow Agent**: Combines weighted rollouts, RAVE, and action sorting  
+- **Defensive Agent**:  
+  - Pursues visible intruders  
+  - Patrols territory when no intruders detected  
 
 ![Pipeline Diagram](/assets/projects/pacman/mcts_pipeline.png)  
 *Figure 2. Enhanced MCTS pipeline with heuristic strategies.*
@@ -59,20 +94,20 @@ We implemented a **vanilla MCTS agent** and progressively enhanced it with heuri
 
 ## Experiments
 
-We conducted:
-- **Ablation studies** on rollout depth, exploration constant (Cp), and simulation epsilon  
-- **Round robin tournament**: 100 matches per agent pair  
-- **Metrics**: win rate, food collected, oscillation rate, TrueSkill rating  
+- **Setup**: UC Berkeley Pacman AI framework  
+- **Evaluation**: 100 games per configuration, multiple seeds  
+- **Metrics**: win rate, food collected, oscillation rate, decision time  
+- **Tournament**: Round-robin (100 matches per agent pair) + **TrueSkill ranking**  
 
-![Tournament Results](/assets/projects/pacman/mcts_confusion_matrix.png)  
-*Figure 3. Confusion matrix of agent performance across tournaments.*
+### Hyperparameter Ablation
+- **Rollout Depth**: Too shallow misses opportunities, too deep causes loops; best = 10  
+- **Simulation Epsilon (ε)**: Best trade-off at 0.2–0.3  
+- **Cp (exploration constant)**: Best at 0.707  
 
-### Key Results
-- Deeper rollout (>15) added noise; best at **depth = 10**  
-- Simulation epsilon around **0.2–0.3** balanced exploration and exploitation  
-- **Cp = 0.707** (literature default) gave best trade-off  
-- **Weighted rollouts & action sorting** strongly outperformed vanilla MCTS and pure heuristics  
-- **Top-performing agents**: Sorting-based MCTS, Weighted Rollout MCTS  
+### Tournament Results
+
+![Tournament Results](/assets/mgai/assignment_2/mgai_2_confusion.png)  
+*Figure 3. Confusion matrix of head-to-head matches.*
 
 | Agent Variant              | TrueSkill Score | Win %  |
 |----------------------------|-----------------|--------|
@@ -88,19 +123,33 @@ We conducted:
 
 ## Analysis
 
-- **Heuristic-guided rollouts** greatly improved decision-making quality  
-- **Action sorting** accelerated convergence to strong policies  
-- **Defensive agent** provided stability in multi-agent coordination  
-- Baseline vanilla MCTS underperformed heavily, confirming the need for informed enhancements  
+- **Rollout depth = 10** avoids noise and loops  
+- **ε = 0.2–0.3** balances exploitation and exploration  
+- **Cp = 0.707** consistent with literature best practice  
+- **Heuristic-guided rollouts** improve decision quality significantly  
+- **Action sorting** accelerates convergence to good policies  
+- **Defensive agent** increases stability in multi-agent play  
+- **Vanilla MCTS fails completely**, highlighting need for heuristics  
 
 ---
 
 ## Future Work
 
-We propose integrating **reinforcement learning** (e.g., DQN, Double DQN) into the Pacman Capture the Flag environment to surpass hand-crafted heuristics. Potential enhancements:  
-- Function approximation with deep networks  
-- Experience replay and target network updates  
-- More robust policy learning through adaptive improvements  
+We propose extending MCTS with **Deep Reinforcement Learning**:  
+- Integrating **DQN / Double DQN** for function approximation  
+- Using **experience replay** and **target network updates** for stability  
+- Learning from **raw game features** instead of hand-crafted heuristics  
+
+Such integration could surpass heuristic-driven methods and enable **adaptive learning** in real-time adversarial environments.
+
+---
+
+## Project Details
+
+- **Technologies**: Python, UC Berkeley Pacman AI Framework  
+- **Methods**: MCTS (vanilla + heuristic enhancements), Reflex agents, TrueSkill ranking  
+- **Evaluation**: Ablation studies, Round-robin tournaments, Win rates, TrueSkill scoring  
+- **Contributions**: Heuristic-guided rollouts, Action sorting, Rainbow MCTS, Defensive agent  
 
 ---
 
@@ -112,4 +161,3 @@ We propose integrating **reinforcement learning** (e.g., DQN, Double DQN) into t
 - ![Tournament Results](/assets/projects/pacman/mcts_confusion_matrix.png)  
 
 ---
-

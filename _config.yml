@@ -1,9 +1,8 @@
 title: "My ML Portfolio"
 description: "A blog and portfolio to showcase my machine learning journey."
-baseurl: "" # Leave empty for root
+baseurl: "" 
 url: "https://yourusername.github.io"
 theme: minima
-
 
 # Navigation
 header_pages:
@@ -12,18 +11,17 @@ header_pages:
   - projects.md
   - blog.md
 
-
 collections:
   projects:
     output: true
-    permalink: /projects/:path/
-    
+    permalink: "/projects/:path/"
 
 # Socials (optional)
-github_username: yourusername
-linkedin_username: yourname
-email: your@email.com
+github_username: "yourusername"
+linkedin_username: "yourname"
+email: "your@email.com"
 
+# Markdown settings
 markdown: kramdown
 kramdown:
   input: GFM
