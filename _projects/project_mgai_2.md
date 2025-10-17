@@ -7,6 +7,8 @@ date: 2025-09-08
 
 # Monte Carlo Tree Search for Multi-Agent Pacman Capture the Flag
 
+## Update
+
 This project develops a vanilla MCTS agent and progressively augments it with heuristics to better handle the dynamics of the Capture the Flag environment in Pacman.
 
 ---
