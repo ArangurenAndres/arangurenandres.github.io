@@ -189,13 +189,4 @@ Difficulty scores were discretized into {Easy, Medium, Hard}. During generation:
 
 ## Appendix (Figures)
 
-- ![Mario Pipeline](/assets/mgai/assignment_3/mario_pipeline.png)  
-- ![Levels Processing](/assets/mgai/assignment_3/levels_processing.png)  
-- ![MLP Generated Level](/assets/mgai/assignment_3/mlp_generated.png)  
-- ![DCGAN Levels](/assets/mgai/assignment_3/dcgan_levels.png)  
-- ![DCGAN Loss Curves](/assets/mgai/assignment_3/dcgan_loss.png)  
-- ![Diffusion Architecture](/assets/mgai/assignment_3/diffusion_architecture.png)  
-- ![Diffusion Loss](/assets/mgai/assignment_3/diffusion_loss.png)  
-- ![Conditioning Scheme](/assets/mgai/assignment_3/conditioning_scheme.png)  
-
 ---

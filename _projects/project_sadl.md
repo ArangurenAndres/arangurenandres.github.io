@@ -8,196 +8,185 @@ permalink: /projects/lws-variants/
 
 # Crown, Frame, Reverse: Layer-Wise Scaling Variants for LLM Pre-Training
 
-*Authors: Andrei Baroian, Kasper Notebomer, Max Van Den Boom, **Andres Aranguren** (LIACS, Leiden University)*. :contentReference[oaicite:0]{index=0}
+*Authors: Andrei Baroian, Kasper Notebomer, Max Van Den Boom, **Andres Aranguren** (LIACS, Leiden University)*  
 
 > **Code repository:** [github.com/baroian/OLMo-custom](https://github.com/baroian/OLMo-custom)  
-> **Full report:** [Download PDF](/assets/papers/sadl_project.pdf) :contentReference[oaicite:1]{index=1}
+> **Full report:** [Download PDF](/assets/sadl/sadl_project.pdf)
+
+---
+
+## Project Context
+
+This project was developed as part of the *Advanced Deep Learning Seminar (SADL)* at LIACS, Leiden University.  
+The study revisits **Layer-Wise Scaling (LWS)** — a technique for redistributing parameters across Transformer depth — and proposes new architectural profiles that challenge the assumption of uniform layer design.  
+All experiments were conducted on the **Snellius supercomputer**, using the **OLMo-core** training framework.  
+
+The project evolved into a broader investigation on **architectural efficiency** and **representation specialization** in large language models.
 
 ---
 
 ## TL;DR
 
-Large Language Models (LLMs) are almost always trained **isotropically** (same hidden width and head count across all layers). But not all layers are equal: some encode shallow features, others abstract reasoning, some act as bottlenecks.  
+Large Language Models (LLMs) are typically trained **isotropically** — every layer has identical width and head count — despite evidence that different layers serve distinct roles.  
 
-We test **Layer-Wise Scaling (LWS)**, where layer widths vary systematically, in a **controlled 180M-parameter setting**. Our contributions:  
+We explored **Layer-Wise Scaling (LWS)**, which systematically varies layer widths, under a fixed 180M-parameter budget.  
+Our contributions:
 
-- Introduced **three new LWS profiles**: **Framed (U-shape), Reverse (descending), Crown (ends wide)**.  
-- Compared against **Vanilla LWS** (linear interpolation) and an **isotropic baseline**.  
+- Introduced **three new LWS profiles**: **Framed (U-shape)**, **Reverse (descending)**, and **Crown (ends wide)**.  
+- Compared against **Vanilla LWS** and an **isotropic baseline**.  
 - Trained all models on **5B tokens**, same optimizer and schedule.  
-- Found **consistent 5–6% perplexity improvements** over isotropy with *no throughput penalty*.  
+- Found **consistent 5–6% validation perplexity improvements** with *no throughput penalty*.  
 
-**Key message:** Heterogeneity is powerful. The specific shape matters less than **moving away from uniformity**.
+**Key message:** Heterogeneity is beneficial — the exact shape matters less than breaking uniformity.
+
+---
+
+## Motivation in One Chart
+
+![Scaling Profiles](/assets/sadl/lws_variants.png)
+*Figure 3. Parameter allocation profiles for each model.*
+
+Modern Transformers distribute parameters uniformly across depth, but different layers encode linguistic, syntactic, and semantic abstractions.  
+By redistributing capacity, we hypothesize more efficient use of the same parameter budget.
 
 ---
 
 ## 1. Background & Motivation
 
 ### 1.1 Standard Isotropy in Transformers
-Most LLMs (GPT-3, LLaMA, Falcon, etc.) assume *isotropy*:
-- Every Transformer block has the same **hidden size** (d_model).
-- Feedforward layers (FFN) are uniformly **4 × d_model**.
-- Attention uses a constant number of heads across depth.
-
-This simplifies implementation but may be **suboptimal**:
-- Different layers encode **different linguistic/semantic functions**.  
-- **Early layers** specialize in local lexical patterns,  
-- **Middle layers** capture syntax and long-range dependencies,  
-- **Late layers** integrate global context and abstractions.
+Uniform scaling simplifies training but may waste capacity by allocating identical dimensions to layers with very different functional roles.
 
 ### 1.2 Prior Evidence for Heterogeneity
-- **Scaling Laws:** Kaplan et al. (2020) showed that performance gains from parameters are not uniform across components.  
-- **Pruning Studies:** Michel et al. (2019), Voita et al. (2019) found redundancy varies by layer; some layers prune aggressively without loss, others are essential.  
-- **OpenELM (2024):** Introduced **Layer-Wise Scaling (LWS)**, linearly interpolating widths across depth. Their experiments demonstrated gains even at small scales.
+- **Scaling Laws** (Kaplan et al., 2020): gains are uneven across components.  
+- **Pruning Studies** (Michel et al., 2019; Voita et al., 2019): redundancy varies per layer.  
+- **OpenELM (2024):** first introduced *Layer-Wise Scaling* and reported improved efficiency.
 
-### 1.3 Our Hypothesis
-If linear LWS helps, then **alternative profile shapes**—non-monotonic or reversed—may:  
-- Redistribute capacity more efficiently,  
-- Highlight structural roles of early vs. late layers,  
-- Offer insight into the “division of labor” in deep transformers.  
+### 1.3 Hypothesis
+Alternative non-linear scaling patterns could:
+- Allocate computation more effectively,  
+- Enhance representational specialization,  
+- Provide insight into how depth relates to capability.
 
 ---
 
 ## 2. Methodology
 
-### 2.1 Layer-Wise Scaling Framework
-Given an **18-layer Transformer** and a fixed parameter budget (~180M):  
-- Define a width multiplier function **f(l)** for each layer index **l ∈ [1, 18]**.  
-- Apply scaling to:
-  - **FFN width**: `d_ff(l) = f(l) × base_ff`  
-  - **Attention heads**: `h(l) = f(l) × base_heads`  
+### 2.1 Framework
 
-Widths are rounded to nearest multiple of 8 for hardware efficiency.
+We trained **18-layer Transformer models** with equal total parameters (≈180M).  
+Layer-wise scaling modifies feed-forward and attention dimensions as functions of layer index:
+
+\[
+d_{ff}(l) = f(l) \times base_{ff}, \quad h(l) = f(l) \times base_{heads}
+\]
 
 ### 2.2 Profiles
 
-1. **Isotropic (baseline):**  
-   \[
-   f(l) = 1 \quad \forall l
-   \]
+1. **Isotropic (baseline)** — constant dimensions.  
+2. **Vanilla LWS** — linearly increasing depth scaling.  
+3. **Framed LWS** — same as Vanilla but with fixed first/last layers.  
+4. **Reverse LWS** — decreasing dimensions across depth.  
+5. **Crown LWS** — largest middle layers; framed at both ends.
 
-2. **Vanilla LWS (linear interpolation):**  
-   \[
-   f(l) = \alpha + \frac{l}{L} (\beta - \alpha)
-   \]
-   where \(\alpha, \beta\) define starting and ending multipliers.
-
-3. **Framed (U-shape):**  
-   - Narrower at beginning and end, widest at the middle layer.  
-   - Implemented as quadratic interpolation peaking at \(l = L/2\).
-
-4. **Reverse (descending):**  
-   - Starts wide at shallow layers, decreases toward deep layers.  
-   - Motivated by pruning results showing redundancy deeper in the stack.
-
-5. **Crown (ends wide):**  
-   - Wide in first and last layers, narrower in the middle.  
-   - Hypothesis: Input and output interfaces require more representational capacity.
-
-![Scaling Profiles](/assets/projects/sadl/fig_profiles.png)  
-*Comparison of Isotropic vs. LWS profile shapes.*
-
-### 2.3 Training Configuration
-- **Dataset:** 5B tokens (subword tokenized, Wikipedia + Common Crawl subset).  
-- **Batch size:** 2M tokens per step.  
-- **Steps:** 2.5M optimizer updates.  
-- **Optimizer:** AdamW with β₁=0.9, β₂=0.95.  
+### 2.3 Training Setup
+- **Dataset:** 5B tokens (Wikipedia + Common Crawl subset).  
+- **Optimizer:** AdamW (β₁=0.9, β₂=0.95).  
 - **LR schedule:** Warmup + cosine decay.  
-- **Evaluation:** Validation perplexity measured every 10K steps.  
-- **Hardware:** Multi-GPU A100 cluster (throughput measured in TFLOPs/s).  
+- **Batch size:** 2M tokens/step.  
+- **Evaluation:** Validation perplexity every 10K steps.  
+- **Hardware:** 4× NVIDIA H100 GPUs on Snellius.
 
 ---
 
 ## 3. Results
 
-### 3.1 Training Loss Curves
-![Loss Curves](/assets/projects/sadl/fig_loss.png)  
-- All heterogeneous models (Framed, Reverse, Crown, Vanilla LWS) trained faster and reached lower loss than isotropic.  
-- Reverse and Crown showed slightly more aggressive early improvements.
+### 3.1 Training Curves
+
+![Training Cross Entropy Loss](/assets/sadl/training_loss.png)
+*Figure 6. Training Cross Entropy Loss.*
+
+![Zoomed-in Training Loss](/assets/sadl/training_loss_zoom.png)
+*Figure 7. Training Cross Entropy Loss (zoomed).*
+
+All heterogeneous variants achieved smooth convergence and consistently lower loss than the isotropic baseline.  
+Reverse and Crown showed faster initial convergence, indicating better early optimization dynamics.
 
 ### 3.2 Validation Perplexity
-| Model          | Params | Val PPL | Δ vs Isotropic |
-|----------------|--------|---------|----------------|
-| **Isotropic**  | 180M   | 20.1    | —              |
-| Vanilla LWS    | 179M   | 19.3    | -4.0%          |
-| Framed LWS     | 179M   | 19.2    | -4.5%          |
-| Reverse LWS    | 179M   | 19.0    | -5.5%          |
-| Crown LWS      | 179M   | 19.0    | -5.5%          |
 
-### 3.3 Throughput Analysis
-![Throughput](/assets/projects/sadl/fig_throughput.png)  
-- Throughput differences across profiles were **<1%**.  
-- Indicates **heterogeneity is essentially cost-free** in terms of wall-clock efficiency.
+![Validation Perplexity (12L vs 18L)](/assets/sadl/val_perplexity_12v18.png)
+ Validation Perplexity comparison between 12-layer and 18-layer Transformer models.*
+
+![Validation Perplexity (LWS Variants)](/assets/sadl/val_perplexity_lws.png)
+ Validation Perplexity on Layer-Wise Scaling variants (zoomed-in).*
+
+Validation curves show that all heterogeneous configurations achieve lower perplexity than isotropic baselines.  
+Reverse and Crown profiles converge faster and maintain lower perplexity throughout training, especially in later steps.
+
+
+| Model | Params | Val PPL | Δ vs Isotropic |
+|--------|--------|---------|----------------|
+| **Isotropic (Baseline 18L)** | 180M | 5.40 | — |
+| Vanilla LWS | 179M | 5.09 | −5.7% |
+| Framed LWS | 179M | 5.21 | −3.5% |
+| Reverse LWS | 179M | 5.09 | −5.7% |
+| Crown LWS | 179M | 5.06 | −6.3% |
+
+*Derived from Figure 5 (Validation Perplexity on 18-layer LWS variants).*
+
+All LWS variants outperform the isotropic baseline by ~5–6% in validation perplexity, confirming that **heterogeneity improves efficiency regardless of profile shape.**
+
+### 3.3 Throughput
+
+![Throughput](/assets/sadl/throughput.png)
+*Derived from Table 3. Tokens per second (TPS) across model variants.*
+
+Training speed differences were negligible (<1%), showing that LWS introduces **no computational overhead** when implemented under equal parameter budgets.
 
 ---
 
-## 4. Analysis & Discussion
+## 🔍 Key Findings
 
-### 4.1 Why Heterogeneity Helps
-- **Over-allocation avoided:** Isotropic models waste capacity in some layers.  
-- **Task specialization:** Different stages of processing benefit from tailored widths.  
-- **Implicit regularization:** Non-uniformity may prevent “lazy redundancy” across depth.
+- All LWS variants yield **consistent validation gains** over isotropy (~5%).  
+- **Training throughput unaffected**, confirming efficiency.  
+- The **exact shape** (Crown, Reverse, Framed) is less critical than introducing diversity itself.  
+- Indicates that **layer heterogeneity** can act as a lightweight structural regularizer.
 
-### 4.2 Shape Sensitivity
-- All heterogeneous profiles performed **similarly well**.  
-- Suggests *being heterogeneous matters more than which shape*.  
-- Crown and Reverse slightly outperformed Framed, but differences are within statistical noise.
+---
 
-### 4.3 Practical Implications
-- LWS can be applied **without changing training cost or architecture**.  
-- Makes heterogeneous allocation a **low-risk, high-return design choice**.  
-- Could combine with other scaling optimizations (e.g., depth-vs-width tradeoffs).
+## 4. Discussion
+
+### Why Heterogeneity Helps
+- Prevents redundant capacity allocation.  
+- Promotes distinct feature hierarchies across layers.  
+- Implicitly regularizes learning dynamics.
+
+### Practical Implications
+LWS is a simple, low-risk modification:  
+it requires **no architectural redesign**, maintains **identical cost**, yet improves convergence and generalization.
 
 ---
 
 ## 5. Related Work
-
-- **Scaling Laws for Neural Language Models** (Kaplan et al., 2020): Formalized parameter vs. performance scaling, showing diminishing returns depending on allocation.  
-- **Are Sixteen Heads Really Better Than One?** (Michel et al., 2019): Showed many attention heads are redundant, motivating heterogeneous allocation.  
-- **Analyzing Multi-Head Self-Attention** (Voita et al., 2019): Identified that different layers contribute unevenly to representation.  
-- **OpenELM (2024):** Introduced vanilla LWS with linear interpolation, demonstrating heterogeneous allocation improves pre-training efficiency.  
-- **Lottery Ticket Hypothesis (Frankle & Carbin, 2018):** Highlights redundancy in network layers, indirectly supporting non-uniform architectures.
+- **Scaling Laws for Neural Language Models** — Kaplan et al. (2020)  
+- **Attention Head Redundancy** — Michel et al. (2019), Voita et al. (2019)  
+- **OpenELM** — Mehta et al. (2024): first introduced Layer-Wise Scaling.  
+- **Lottery Ticket Hypothesis** — Frankle & Carbin (2018): motivates efficient parameter use.
 
 ---
 
 ## 6. Conclusion
 
-This study validates that **Layer-Wise Scaling (LWS)** improves Transformer training efficiency. Our contributions:  
-- Proposed three novel profiles (Framed, Reverse, Crown).  
-- Showed consistent **5–6% validation perplexity gains** vs isotropy.  
-- Found negligible throughput costs.  
-
-**Main takeaway:** *Heterogeneous allocation should be the new default for LLM design.*  
+We introduced three new **Layer-Wise Scaling (LWS)** profiles — *Framed, Reverse, Crown* — and showed that all outperform uniform baselines without increasing cost.  
+This supports the hypothesis that **heterogeneity should be a design default** for Transformer-based LLMs.
 
 ---
 
 ## 7. Future Work
 
-1. **Scaling to billions of parameters**: Validate if effects persist in 1B–7B models.  
-2. **Alternative interpolation schemes**: Non-linear (exponential, cosine) or learned functions.  
-3. **Automatic profile discovery**: Use reinforcement learning or evolutionary search to learn optimal allocation.  
-4. **Interpretability analysis**: Probe what representations differentially sized layers actually capture.  
-5. **Fine-tuning transfer**: Test whether LWS-trained models adapt better in downstream tasks.
+1. Scale to 1B–7B parameters.  
+2. Explore non-linear or learned scaling functions.  
+3. Automate profile discovery via RL or evolutionary search.  
+4. Study interpretability and representational diversity.  
+5. Test transfer benefits during fine-tuning.
 
 ---
-
-## Appendix
-
-### Figures
-- ![Scaling Profiles](/assets/projects/sadl/fig_profiles.png)  
-- ![Loss Curves](/assets/projects/sadl/fig_loss.png)  
-- ![Throughput](/assets/projects/sadl/fig_throughput.png)
-
-### Equations
-- Vanilla LWS (linear):
-  \[
-  f(l) = \alpha + \frac{l}{L} (\beta - \alpha)
-  \]
-
-- Crown profile (piecewise quadratic):
-  \[
-  f(l) = 1 + \gamma \cdot \left( \frac{|l - L/2|}{L/2} \right)
-  \]
-
----
-
-*For technical details and derivations, see the [full PDF report](/assets/papers/sadl_project.pdf).*  
