@@ -3,7 +3,7 @@ layout: default
 title: "From Imitation to Interaction: Reinforcement-Learning–Driven Demonstration Selection for LLM Agents"
 preview_image: /assets/sarl/sarl_preview.png
 date: 2025-09-08
-permalink: /projects/robogo-llm-navigation/
+permalink: /projects/sarl_project/
 ---
 
 # Introduction
