@@ -9,20 +9,23 @@ permalink: /
   <p class="text-lg text-gray-600">My Machine Learning Blog</p>
 
   <p class="max-w-2xl mx-auto mt-6 text-base text-gray-700 leading-relaxed">
-    Here I share projects, experiments, and ideas at the intersection of 
-    <span class="font-semibold">machine learning</span>, 
-    <span class="font-semibold">reinforcement learning</span>, 
-    <span class="font-semibold">robotics</span>, and 
-    <span class="font-semibold">computer vision</span>.
+    Here I share projects, experiments, and research notes around 
+    <span class="font-semibold">deep reinforcement learning</span>, 
+    <span class="font-semibold">LLM-based agents</span>, and 
+    <span class="font-semibold">robotics</span> — with a focus on planning, reasoning, and decision-making in complex environments.
   </p>
+
   <ul class="max-w-xl mx-auto mt-8 space-y-3 text-left text-lg leading-relaxed">
-    <li>📌 <span class="font-semibold">Reinforcement Learning</span> — from DQNs on CartPole to Actor-Critic methods</li>
-    <li>🤖 <span class="font-semibold">Robotics</span> — Raspberry Pi LLM guided navigation in unknown environments</li>
-    <li>🎮 <span class="font-semibold">Game AI</span> — MCTS agents for Pacman Capture the Flag / GANs for level generation, and level conditioning using RL agents</li>
-    <li>🧠 <span class="font-semibold">Deep Learning</span> — neural networks, recommendation systems, generative models</li>
+    <li>🎯 <span class="font-semibold">Deep Reinforcement Learning</span> — DQN, Actor-Critic, PPO-style policy gradients, ablations & evaluation</li>
+    <li>🧩 <span class="font-semibold">LLM Agents</span> — reasoning, planning, tool-use, action evaluation, and self-improving agent loops</li>
+    <li>🤖 <span class="font-semibold">Robotics</span> — autonomous exploration and object finding guided by vision-language models</li>
+    <li>🎮 <span class="font-semibold">Procedural Content Generation</span> — generative level design, conditioning with RL agents, search + evolution</li>
+    <li>📚 <span class="font-semibold">Deep Learning Theory & Practice</span> — training dynamics, scaling, architectures, and reproducible experiments</li>
   </ul>
 
-  <p class="mt-10 text-gray-500">Thanks for stopping by — I’ll keep adding new projects regularly!</p>
+  <p class="mt-10 text-gray-500">
+    Thanks for stopping by — I’ll keep adding new projects and write-ups regularly!
+  </p>
 </header>
 
 <div class="page-body">
@@ -52,9 +55,9 @@ permalink: /
     <div class="about-card">
       <img src="/assets/images/profile.png" alt="Andres Aranguren" class="about-photo" />
       <h3>About me</h3>
-      <p>👋 I’m a machine learning engineer focused on deep reinforcement learning, generative models, and robotics.</p>
-      <p>Currently researching autonomous systems using policy gradients and model-based control.</p>
-      <p>🔗 <a href="https://github.com/yourusername" target="_blank">GitHub</a> | <a href="mailto:your@email.com">Email</a></p>
+      <p>👋 I’m a machine learning engineer working on deep reinforcement learning, LLM-based agents, and robotics.</p>
+      <p>I’m especially interested in planning and action evaluation for autonomous systems, and open-ended exploration.</p>
+      <p>🔗 <a href="https://github.com/ArangurenAndres" target="_blank">GitHub</a> | <a href="aranguren.andres9712@gmail.com">Email</a></p>
     </div>
   </aside>
 </div>
