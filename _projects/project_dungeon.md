@@ -8,7 +8,81 @@ tags: [MAP-Elites, quality-diversity, evolution-strategies, PCG, flask, python]
 ---
 
 
-## TL;DR
+
+
+
+
+<h2 style="text-align:center; margin-top: 1.5rem; font-size: 2rem; font-weight: 800;">
+  A Quality–Diversity Dungeon Generator
+</h2>
+
+<p style="text-align:center; color:#6b7280; margin-top: 0.5rem; font-size: 1.1rem;">
+  MAP-Elites + Self-Adaptive Evolution Strategies for diverse playable 2D levels (with a Flask demo)
+</p>
+
+
+<section style="margin-top: 1.5rem; margin-bottom: 2rem;">
+  <p style="text-align:center; color:#6b7280; margin-bottom: 1rem;">
+    <strong>Top MAP-Elites dungeon samples</strong> (9 diverse elites across the archive)
+  </p>
+
+  <div style="
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:12px;
+    align-items:stretch;
+  ">
+    <img src="/assets/level_gen/es_model/top_01.png" alt="Elite 1" style="width:100%; border-radius:14px;">
+    <img src="/assets/level_gen/es_model/top_02.png" alt="Elite 2" style="width:100%; border-radius:14px;">
+    <img src="/assets/level_gen/es_model/top_03.png" alt="Elite 3" style="width:100%; border-radius:14px;">
+
+    <img src="/assets/level_gen/es_model/top_04.png" alt="Elite 4" style="width:100%; border-radius:14px;">
+    <img src="/assets/level_gen/es_model/top_05.png" alt="Elite 5" style="width:100%; border-radius:14px;">
+    <img src="/assets/level_gen/es_model/top_06.png" alt="Elite 6" style="width:100%; border-radius:14px;">
+
+    <img src="/assets/level_gen/es_model/top_07.png" alt="Elite 7" style="width:100%; border-radius:14px;">
+    <img src="/assets/level_gen/es_model/top_08.png" alt="Elite 8" style="width:100%; border-radius:14px;">
+    <img src="/assets/level_gen/es_model/top_09.png" alt="Elite 9" style="width:100%; border-radius:14px;">
+  </div>
+
+  <p style="text-align:center; color:#9ca3af; margin-top: 0.9rem; font-size: 0.95rem;">
+    Each sample is an elite from a different niche in the behavior space (density × path length).
+  </p>
+</section>
+
+
+<p style="text-align:center; margin-top: 0.9rem;">
+  <a href="https://qd-pcg-dungeons.onrender.com/" target="_blank" rel="noopener"
+     style="
+       display:inline-block;
+       padding:10px 18px;
+       border-radius:14px;
+       background:#111827;
+       color:#ffffff;
+       font-weight:800;
+       text-decoration:none;
+       margin-right:10px;
+     ">
+    ▶ Launch Interactive Dungeon UI
+  </a>
+
+  <a href="https://github.com/ArangurenAndres/qd_pcg_dungeons" target="_blank" rel="noopener"
+     style="
+       display:inline-block;
+       padding:10px 18px;
+       border-radius:14px;
+       border:1px solid #e5e7eb;
+       background:#ffffff;
+       color:#111827;
+       font-weight:800;
+       text-decoration:none;
+     ">
+    💻 View GitHub Code
+  </a>
+</p>
+
+
+
 
 I built a **simple but technically grounded** procedural content generation (PCG) project in Python that generates **2D dungeon-like grid levels** using:
 
@@ -85,6 +159,16 @@ This keeps evaluation simple and consistent.
 Instead of using an LLM or a complex player model, we build a minimal playtesting loop:
 
 ### 1) Hard constraint: BFS solvability
+
+**Breadth-First Search (BFS)** is a graph traversal algorithm that explores a grid **layer by layer**, starting from the start tile. Each walkable tile is treated as a node and each move (up, down, left, right) as an equal-cost edge. BFS guarantees that the first time the goal is reached, the path found is the **shortest possible**. In this project, BFS is used as a **hard solvability constraint**: if no path from start to goal exists, the level is discarded as unplayable.
+
+
+
+
+
+
+
+
 
 We run BFS from `S` to `G`.
 
