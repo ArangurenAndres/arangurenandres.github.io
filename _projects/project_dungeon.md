@@ -203,9 +203,9 @@ The fitness combines several normalized terms:
 - higher visited fraction indicates exploration / open layouts
 - density penalty discourages extremely sparse/dense maps
 
-\[
+$$
 f = W_{SR}\cdot SR + W_{PATH}\cdot \hat{P} + W_{VF}\cdot VF - W_{DENS}\cdot \hat{D}
-\]
+$$
 
 Where:
 
@@ -266,9 +266,9 @@ This is smoother and more continuous, so MAP-Elites fills more bins.
 
 Each individual has a mutation rate `sigma` that evolves:
 
-\[
+$$
 \sigma' = \sigma \cdot \exp(\tau \cdot \mathcal{N}(0,1))
-\]
+$$
 
 This is the classic log-normal self-adaptation used in ES.
 
