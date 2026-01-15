@@ -20,7 +20,7 @@ permalink: /
     <li>🧩 <span class="font-semibold">LLM Agents:  reasoning, planning, tool-use, action evaluation, and self-improving agent loops</li>
     <li>🤖 <span class="font-semibold">Robotics: autonomous exploration and object finding guided by vision-language models</li>
     <li>🎮 <span class="font-semibold">Procedural Content Generation: generative level design, conditioning with RL agents, search + evolution</li>
-    <li>📚 <span class="font-semibold">Deep Learning Theory & Practice: training dynamics, scaling, architectures, and reproducible experiments</li>
+    <li>📚 <span class="font-semibold">Deep Learning Theory & Practice</span>  training dynamics, scaling, architectures, and reproducible experiments</li>
   </ul>
 
   <p class="mt-10 text-gray-500">

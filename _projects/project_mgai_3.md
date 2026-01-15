@@ -77,7 +77,7 @@ The pipeline consists of two main stages:
 - Fails to preserve spatial structure.  
 - Output: unplayable, mostly floor tiles.  
 
-![MLP Generated Level](/assets/mgai/assignment_3/mlp_generated.png)
+![MLP Generated Level](/assets/mgai/assignment_3/mlp_level.png)
 
 #### 2. **DCGAN**  
 - Uses **transposed convolutions** for spatial preservation.  
@@ -85,14 +85,17 @@ The pipeline consists of two main stages:
 - Required hyperparameter search (learning rates, batch size, latent dimension).  
 - Generated **coherent Mario-like levels**.  
 
-![DCGAN Generated Levels](/assets/mgai/assignment_3/dcgan_levels.png)
+![DCGAN Generated Levels](/assets/mgai/assignment_3/dcg_gan_level_01.png)
+
+
+![DCGAN Generated Levels](/assets/mgai/assignment_3/dcg_gan_lavel_02.png)
 
 #### 3. **Diffusion Model**  
 - U-Net-like denoiser (SimpleDenoiseNet) + Gaussian diffusion process.  
 - Learned reconstruction loss well, but failed to preserve structure.  
 - Likely due to lack of attention and discrete-symbol mapping issues.  
 
-![Diffusion Architecture](/assets/mgai/assignment_3/diffusion_architecture.png)
+![Diffusion Architecture](/assets/mgai/assignment_3/diffusion_model.png)
 
 ---
 

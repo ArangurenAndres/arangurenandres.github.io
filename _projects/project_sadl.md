@@ -18,7 +18,7 @@ permalink: /projects/lws-variants/
 ## Project Context
 
 This project was developed as part of the *Advanced Deep Learning Seminar (SADL)* at LIACS, Leiden University.  
-The study revisits **Layer-Wise Scaling (LWS)** — a technique for redistributing parameters across Transformer depth — and proposes new architectural profiles that challenge the assumption of uniform layer design.  
+The study revisits **Layer-Wise Scaling (LWS)**  a technique for redistributing parameters across Transformer depth — and proposes new architectural profiles that challenge the assumption of uniform layer design.  
 All experiments were conducted on the **Snellius supercomputer**, using the **OLMo-core** training framework.  
 
 The project evolved into a broader investigation on **architectural efficiency** and **representation specialization** in large language models.
@@ -27,7 +27,7 @@ The project evolved into a broader investigation on **architectural efficiency**
 
 ## TL;DR
 
-Large Language Models (LLMs) are typically trained **isotropically** — every layer has identical width and head count — despite evidence that different layers serve distinct roles.  
+Large Language Models (LLMs) are typically trained **isotropically**  every layer has identical width and head count — despite evidence that different layers serve distinct roles.  
 
 We explored **Layer-Wise Scaling (LWS)**, which systematically varies layer widths, under a fixed 180M-parameter budget.  
 Our contributions:
