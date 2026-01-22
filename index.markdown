@@ -3,29 +3,28 @@ layout: page
 title: "Home"
 permalink: /
 ---
-<header class="hero bg-gray-50 rounded-2xl text-center py-16 px-6">
-  <h1 class="text-4xl font-bold mb-2">Welcome</h1>
-  <p class="text-lg text-gray-600">My Machine Learning Blog</p>
-
-  <p class="max-w-2xl mx-auto mt-6 text-base text-gray-700 leading-relaxed">
-    Here I share projects, experiments, and research notes around
-    <span class="font-semibold">deep reinforcement learning</span>,
-    <span class="font-semibold">LLM-based agents</span>, and
-    <span class="font-semibold">robotics</span> with a focus on planning, reasoning, and decision-making in complex environments.
-  </p>
-
-  <ul class="max-w-xl mx-auto mt-8 space-y-3 text-left text-lg leading-relaxed">
-    <li>🎯 <span class="font-semibold">Deep Reinforcement Learning</span> - DQN, Actor-Critic, PPO-style policy gradients, ablations and evaluation</li>
-    <li>🧩 <span class="font-semibold">LLM Agents</span> - reasoning, planning, tool-use, action evaluation, and self-improving agent loops</li>
-    <li>🤖 <span class="font-semibold">Robotics</span> - autonomous exploration and object finding guided by vision-language models</li>
-    <li>🎮 <span class="font-semibold">Procedural Content Generation</span> - generative level design, conditioning with RL agents, search and evolution</li>
-    <li>📚 <span class="font-semibold">Deep Learning Theory and Practice</span> - training dynamics, scaling, architectures, and reproducible experiments</li>
-  </ul>
-
-  <p class="mt-10 text-gray-500">
-    Thanks for stopping by. I’ll keep adding new projects and write-ups regularly!
-  </p>
-</header>
+<ul class="max-w-xl mx-auto mt-8 space-y-3 text-left text-lg leading-relaxed">
+  <li>
+    <span class="font-semibold">Deep Reinforcement Learning</span> ·
+    DQN, Actor-Critic, PPO-style policy gradients, ablations and evaluation
+  </li>
+  <li>
+    <span class="font-semibold">LLM Agents</span> ·
+    reasoning, planning, tool-use, action evaluation, and self-improving agent loops
+  </li>
+  <li>
+    <span class="font-semibold">Robotics</span> ·
+    autonomous exploration and object finding guided by vision-language models
+  </li>
+  <li>
+    <span class="font-semibold">Procedural Content Generation</span> ·
+    generative level design, conditioning with RL agents, search and evolution
+  </li>
+  <li>
+    <span class="font-semibold">Deep Learning Theory and Practice</span> ·
+    training dynamics, scaling, architectures, and reproducible experiments
+  </li>
+</ul>
 
 <div class="page-body">
   <main class="content">
