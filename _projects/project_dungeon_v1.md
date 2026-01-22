@@ -1,0 +1,308 @@
+---
+layout: default
+title: "From Dungeons to Stories: Extending Quality–Diversity to Open-Ended Narrative Generation (v1)"
+date: 2026-01-22
+categories: [procedural-generation, quality-diversity, narrative-generation, game-ai]
+preview_image: /assets/level_gen/v1/v1_open_narrative.png
+tags: [MAP-Elites, quality-diversity, open-endedness, PCG, narratives, python]
+---
+
+
+
+<h2 style="text-align:center; margin-top: 1.5rem; font-size: 2rem; font-weight: 800;">
+From Dungeons to Stories: Applying Quality–Diversity to Open-Ended Narrative Generation
+</h2>
+
+<p style="text-align:center; color:#6b7280; margin-top: 0.5rem; font-size: 1.1rem;">
+  Extending a Quality–Diversity engine from spatial level generation to open-ended narrative structures
+</p>
+
+
+<p style="text-align:center; margin-top: 0.9rem;">
+  <a href="https://qd-pcg-dungeons.onrender.com/" target="_blank" rel="noopener"
+     style="
+       display:inline-block;
+       padding:10px 18px;
+       border-radius:14px;
+       background:#111827;
+       color:#ffffff;
+       font-weight:800;
+       text-decoration:none;
+       margin-right:10px;
+     ">
+    ▶ Launch Interactive Dungeon UI
+  </a>
+
+  <a href="https://github.com/ArangurenAndres/qd_pcg_dungeons" target="_blank" rel="noopener"
+     style="
+       display:inline-block;
+       padding:10px 18px;
+       border-radius:14px;
+       border:1px solid #e5e7eb;
+       background:#ffffff;
+       color:#111827;
+       font-weight:800;
+       text-decoration:none;
+     ">
+    💻 View GitHub Code
+  </a>
+</p>
+
+
+---
+
+## What Is New in v1?
+
+The original project demonstrated how Quality-Diversity QD methods can be used to genereate an archive or repertoire of different playable 2D dungeon levels, instead of an optimized single map.
+
+
+
+**V1 extends the  same QD engine to a new domain: narrative generation.**
+
+We are not chnging the algorithm but the representation and evaluation:
+
+
+| Dungeon version | Narrative v1 |
+|-----------------|--------------|
+| 2D grid levels | Graph-structured stories |
+| Tiles (walls, floors) | Scenes and choices |
+| Path length, density | Branching and tension |
+| Solvability via BFS | Coherent story paths |
+| Visual maps | Narrative graphs and story traces |
+
+The main goal is to test whether the same open-ended search mechanism can discover diverse and coherent narrative structures when applied beyond geometry.
+
+
+
+## Motivation: Why Narratives and Quality–Diversity?
+
+Story generator systems aim to prodcue generally this:
+
+- a single/unique "best" story
+- Or maybe multiple samples from the same distribution
+
+which may lead to:
+
+- repetitive structures
+- limited sytlistic variety
+- creative collapse towards a dominant pattern ("mode collapse")
+
+The idea, is then to  apply **open-ended narrative generation**thats asks the follwoing question:
+
+In contrast, **open-ended narrative generation** asks a different question:
+
+
+> Can we build a system that cotinuosly discovers different kind of storeies, each one being coherent without collapsing to a single average template?
+
+Quality-Diversity methods result a good fit since:
+
+- we are not opmizing a single objective
+- they preserve **structural diversity**
+- we can receive as output an archive or repertoire of outputs instead of a single output
+
+
+---
+
+## High-Level Overview
+
+The narrative extension maintains the same MAP-Elites loop:
+
+1. Generate a candidate artifact
+2. Evaluate its quality
+3. Compute behavior descriptors
+4. Insert it into a structured archive
+5. Repeat
+
+What we are now changing is **what actually the artifact is**.
+
+
+
+## Narrative Representation: Stories as Graphs
+
+Each narrative is now represented as a **directed graph**:
+
+- **Nodes** = scenes  
+- **Edges** = player choices  
+- One designated **START** node  
+- One designated **END** node  
+
+Each scene carries simple semantic attributes:
+- location
+- narrative role (intro, conflict, clue, resolution) (simple but extensible approach  happy with this for now)
+- tension level (Tension level would be how narratively “charged” a scene is, higher values corresponding to conflict, urgency, or critical decisions in the narrative)
+
+This representation is intentionally minimal:
+- no language model required (No LLM implementation for now this will be implemented in V2)
+- fast evaluation
+- structure-first rather than surface text
+
+The goal is to study how a story is built, such as the order of scenes, the available choices, and how tension changes over time.
+I am intentionally ignoring writing style and wording, so the focus stays on the overall story structure rather than the text itself.
+
+
+---
+
+## Validity and Coherence Constraints
+
+Not every graph corresponds to a meaningful story
+Before evaluating the quality or diversity, the system first chcks whether the output narrative is valid (structurally)
+
+
+
+A narrative is considered **invalid** if any of the following hold:
+- END is unreachable from START (thus no valid solution)
+- there is no acyclic path from START to END (we cannot finish the story in a finite sequence of scenes)
+- the graph contains isolated or dead-end scenes
+
+Invalid stories are  discarded, exactly like unsolvable dungeon maps.
+
+This  way we are enforcing  **basic narrative coherence**: every accepted story must have a clear beginning, a reachable ending, and playable continuous sequence of scenes in between.
+
+---
+
+## Evaluation: How Narrative Quality Is Measured
+
+Each valid story is evaluated using a lightweight, fully local procedure.
+
+
+
+### 1) Shortest Story Path
+
+We compute the **shortest path** from START to END:
+- this defines a canonical “playthrough” (simplest sequence of scenes a player can follow to reach resolution)
+- guarantees the story is solvable
+
+This is the narrative analogue of BFS pathfinding in dungeons.
+
+### 2) Structural Metrics
+
+From the graph and the shortest path, we extract the following metrics:
+
+- number of scenes (length and complexity of the story)
+- number of choices (how often the player is asked to make a choice)
+- average branching factor (how many alternative paths are available at decision points)
+- tension progression through the path (narrative intensity rises and falls from beginning to end)
+- penalties for unnecessary loops or redundant structure
+
+These components are combined into a scalar **fitness score** that reflects the quality of a narrative
+
+
+The specific value of the fitness score is not as informative alone, what matters is that-
+
+- Stories with clear structures and a coherent progression have higher fitness score
+- fitness is comparable across different narrative styles
+
+
+---
+
+## Behavior Descriptors: Defining Narrative Diversity
+
+An important question in MAP elites is deciding what it means for two stories to be different. We will define diversity using a set of behavior descriptors that capture key structural properties of a narrative.
+
+We are using the following descriptors for V1:
+
+
+
+### x-axis: Branching (binned)
+
+Measures how many meaningful choices the story offers to the player.
+
+- low values : correspoind mostly to linear stories, in which the player is following a clear guided sequence of scenes.
+- high values : correspond to more exploratory stoires, where the player is offered different paths (branches)
+
+The x-axis is capturing how open or instead guided a story  narrative is.
+
+### y-axis: Tension variability (binned)
+
+It measures how much the narrative intensity changes along the story path.
+
+- low values: it would be a steady "tone" so tension remains "constant" (almost)
+- high values: sotires with rises and drops of intensity, which could be build-up, conflict and eventual resolution. 
+
+This axis is capturing , the "shape" of the story arc (in some way hehe  not sure how to like the dramatic devleopment kinda, hope the readed understands )
+
+---
+
+
+## UI interface
+
+To make the project easy to explore and understand by any user, the system is wrapped in a simple web interface built with Flask.
+
+### Landing Page: Dungeon Generator
+
+![Dungeon generator landing page](/assets/level_gen/v1/v1_landing.png)
+
+
+The first page you see (shown above) corresponds to the original **dungeon generation demo v0**.  
+From this interface, users can:
+
+
+- configure MAP-Elites and Evolution Strategy parameters,
+- run the search live,
+- monitor coverage and fitness as the archive grows,
+- and visualize generated dungeon levels.
+
+This page demonstrates the **spatial PCG** version of the Quality–Diversity engine.
+
+At the top-right of the interface, a button labeled **“Open narrative archive”** allows you to switch to the narrative extension (**V1**).
+
+
+## MAP-Elites Archive: What the Grid Shows
+
+
+
+![Open narrative page](/assets/level_gen/v1/v1_open_narrative.png)
+
+
+
+The narrative interface visualizes the MAP ELITES archives in a 2D grid 
+
+Each cell in the grid represents a distinct narrative story, defined by specific combination of branching complexity and tension variabilty. 
+
+- A cell of the grid is colored when the system has discovered at least one valid story that fits that configuration.
+
+- The color intenisty represents the quality of the best story found in that region of the grid
+ 
+
+- Cells that are empty or white are combination of narratives that were not been explored during the search or they could also be impossible to evaluate under the sytem constraints.
+
+We present the following constraints
+Key statistics shown above the grid:
+
+
+
+- **coverage**: measures how much of the narrative space has been discovered by the algorithm (for now you would have to run the repo locally and run the flask app againg locally to change this since this part is visualized by a fixed .pkl file I am working on running this form the interface sorry for the delay, impressed if you red this far thanks  )
+- **QD-score**: summarizes the overall quality of the archive by agreggating the fitness of the stored stories
+- **evals**: count of how many narrative candidates were evaluated during generation
+
+
+---
+
+## Interpreting the Visualization
+
+![Grid cell](/assets/level_gen/v1/v1_cell.png)
+
+
+
+When clicking on a random cell of the grid is not producing a random story.
+
+It is retrieving the best story disocvered so far , for that specific combination of narrative properties.
+
+
+Since the archive is organized according to branching and tension variability , different parts of the grid prodcue different types of narratives.  
+
+Some might be:
+- linear and calm
+- branching and dramatic
+- exploratory with multiple resolutions
+
+This makes the archive an **interactive map of narrative structure**.
+
+---
+
+## Offline Generation vs Online Exploration
+
+Narrative archives are generated **offline** using:
+
+```bash
+python run_narrative_qd.py

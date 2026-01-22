@@ -10,8 +10,6 @@ tags: [MAP-Elites, quality-diversity, evolution-strategies, PCG, flask, python]
 
 
 
-
-
 <h2 style="text-align:center; margin-top: 1.5rem; font-size: 2rem; font-weight: 800;">
   A Quality–Diversity Dungeon Generator
 </h2>
