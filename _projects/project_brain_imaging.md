@@ -89,11 +89,11 @@ FSM computes similarity between spatial feature vectors, allowing the model to p
 The thesis evaluates X-Net both with FSM enabled and disabled.
 
 ![X-Net block structure](/assets/brain_images/xnet_block.png)
-*Figure #: Structure of the X‐net block used to reduce the number of trainable parameters and increase the strength of
+*Figure 3: Structure of the X‐net block used to reduce the number of trainable parameters and increase the strength of
 feature extraction*
 
 ![X-Net full architecture](/assets/brain_images/xnet_pipeline.png)
-*Figure 3: X‐Net model pipeline consisting on a downsampling section, Feature similarity module and upsampling section
+*Figure 4: X‐Net model pipeline consisting on a downsampling section, Feature similarity module and upsampling section
 to restore input resolution*
 
 ---
@@ -117,7 +117,7 @@ D-UNet integrates a dimension fusion network in the downsampling path. This netw
 Feature fusion mechanisms reduce parameter count and batch normalization is used to improve convergence.
 
 ![D-UNet architecture](/assets/brain_images/dunet_arch.png)
-*Figure #: Architecture of the model based on the D‐Unet. Feature size corresponds to the size of the feature map received
+*Figure 5: Architecture of the model based on the D‐Unet. Feature size corresponds to the size of the feature map received
 as input, the third dimension consists in the number of channels of the input which increase respectively in the
 downsampling portion. Upsampling blocks are additionally connected to the downsampling blocks, in this case up sampling
 block 1 is connected to the Convolution block 3, and the up sampling block 2 connected to convolution block 2*
@@ -168,11 +168,11 @@ The ATLAS dataset contains 955 T1-weighted MRI scans with manually segmented str
 Lesions are manually traced using MRIcron. Metadata describing lesion number and location enables lesion-type-specific evaluation.
 
 ![ATLAS dataset examples](/assets/brain_images/brain_slices.png)
-*Figure #: Overview of different slices forming the MRI volume*
+*Figure 6: Overview of different slices forming the MRI volume*
 
 
 ![Brain anotaiton examples](/assets/brain_images/lesion_seg.png)
-*Figure #: Visualization of MRI scans (Left:MRI scan, Right: manual lesion segmentation)*
+*Figure 7: Visualization of MRI scans (Left:MRI scan, Right: manual lesion segmentation)*
 
 ---
 
@@ -241,7 +241,7 @@ Considering the results reported  in Tables () we can infer the increased perfor
 
 
 ![Lesion segmentation results with FSM](/assets/brain_images/x_net_seg.png)
-*Figure 7: Lesion segmentaiton results from ATLAS dataset. Col 1: MRI image, Col 2: Ground truth, Col 3: Res-UNet, Col 4: U-Net, Col 5: X-Net*
+*Figure 8: Lesion segmentaiton results from ATLAS dataset. Col 1: MRI image, Col 2: Ground truth, Col 3: Res-UNet, Col 4: U-Net, Col 5: X-Net*
 ---
 
 
@@ -281,7 +281,7 @@ The proposed model was compared with U-Net and SegNet, and qualitative results s
 
 
 ![Comparison state of the art](/assets/brain_images/other_methods.png)
-*Figure : Comparison of lesion segmentation performance of D‐UNet, SegNet and U‐net.*
+*Figure 9: Comparison of lesion segmentation performance of D‐UNet, SegNet and U‐net.*
 
 
 
@@ -312,13 +312,13 @@ The model was trained using batch size of 8, max number of epochs fixed at 50 an
 The TransUNet model was compared against two state of the art models implementing transformer based attention mechanism within U-Net architectures. SwinUNet and UCTransNet. Both models were loaded as pretrained models and tested on the ATLAS dataset version 2.0, since they were previously trained on an older and reduced version of the same dataset 
 
 
-| Model   | DSC           | F1-score          | IoU           |
-|---------|--------------------|--------------------|--------------------|
-| TransUNet  | 0.751    | 0.725    | 0.735    |
-| UCTransNet  | 0.739    | 0.727    | 0.733    |
-| SwinUNet  | 0.734    | 0.722    | 0.709    |
-*Table : Evaluation of D‐UNet performance against state of the art methods, SegNet and UNet*
+| Model        | DSC   | F1-score | IoU   |
+|--------------|-------|----------|-------|
+| TransUNet    | 0.751 | 0.725    | 0.735 |
+| UCTransNet  | 0.739 | 0.727    | 0.733 |
+| SwinUNet    | 0.734 | 0.722    | 0.709 |
 
+*Table 1: Evaluation of D-UNet performance against state-of-the-art methods.*
 
 
 
@@ -342,13 +342,18 @@ Lesion-type-specific Dice scores are reported for:
 | Cortical / left | 0.621 | 0.648 | 0.792 |
 | Sub-cortical / bilateral | 0.236 | - | 0.535 |
 
+
+
+According to the results, standard CNN based methods such as X-Net and D-UNet have limited capacity when segmenting multiple lesions in one sample, especially in the case for multiple lesions in different hemispheres. In this cases the models are not able to capture long rande dependencies between the different lesions. Transformer model TransUNet demonstrates a higher performance when segmenting multiple lesions at unilateral and bilateral level obtaining the highest DSC scores of 0.786 and 0.535 respectively; this can be attributed to the use of transformers in the encoding section using the attention mechanism to capture dependencies between the input sequences. As for the cortical lesion reported in Row:2 Figure ##, the three proposed models suggest an acceptable performance with a noticeable decrease in the mask accuracy of the X-Net model.
+
+
 ![Lesion type comparison](/assets/brain_images/lesion_types.png)
-*Figure ##: Segmentation results for different lesion types. Row 1: left hemisphere cortical multiple lesion, Row 2:
+*Figure 10: Segmentation results for different lesion types. Row 1: left hemisphere cortical multiple lesion, Row 2:
 subcortical left single lesion, Row 3: bilateral cortical lesion.*
 
 
 
-According to the results, standard CNN based methods such as X-Net and D-UNet have limited capacity when segmenting multiple lesions in one sample, especially in the case for multiple lesions in different hemispheres. In this cases the models are not able to capture long rande dependencies between the different lesions. Transformer model TransUNet demonstrates a higher performance when segmenting multiple lesions at unilateral and bilateral level obtaining the highest DSC scores of 0.786 and 0.535 respectively; this can be attributed to the use of transformers in the encoding section using the attention mechanism to capture dependencies between the input sequences. As for the cortical lesion reported in Row:2 Figure ##, the three proposed models suggest an acceptable performance with a noticeable decrease in the mask accuracy of the X-Net model.
+
 ---
 
 ## Patch size ablation in TransUNet
@@ -364,8 +369,8 @@ uating:
 | 32 | 49 | 0.751 |
 | 16 | 196 | 0.776 |
 
-![Patch size ablation](assets/images/patch_size_ablation.png)
-*Figure 12: Effect of patch size on TransUNet performance.*
+![Patch size ablation](/assets/brain_images/patch_ablation.png)
+*Figure 11: Using pixel‐scale patches to capture long‐range dependencies in the Transformer module*
 
 ---
 
