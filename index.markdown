@@ -49,13 +49,21 @@ permalink: /
     </section>
   </main>
 
-  <aside class="sidebar">
-    <div class="about-card">
-      <img src="/assets/images/profile.png" alt="Andres Aranguren" class="about-photo" />
-      <h3>About me</h3>
-      <p>👋 I’m a machine learning engineer working on deep reinforcement learning, LLM-based agents, and robotics.</p>
-      <p>I’m especially interested in planning and action evaluation for autonomous systems, and open-ended exploration.</p>
-      <p>🔗 <a href="https://github.com/ArangurenAndres" target="_blank">GitHub</a> | <a href="aranguren.andres9712@gmail.com">Email</a></p>
+<aside class="sidebar">
+  <div class="about-card">
+    <img src="/assets/images/profile.png" alt="Andres Aranguren" class="about-photo" />
+    <h3>About me</h3>
+
+    <p> I’m a machine learning engineer working on deep reinforcement learning, LLM-based agents, and robotics.</p>
+    <p>I’m especially interested in planning and action evaluation for autonomous systems, and open-ended exploration.</p>
+
+    <div class="about-links">
+      <a href="https://github.com/ArangurenAndres" target="_blank" rel="noopener">GitHub</a>
+      <span>·</span>
+      <a href="mailto:aranguren.andres9712@gmail.com">Email</a>
+      <span>·</span>
+      <a href="https://www.linkedin.com/in/andres-aranguren/" target="_blank" rel="noopener">LinkedIn</a>
     </div>
-  </aside>
+  </div>
+</aside>
 </div>
