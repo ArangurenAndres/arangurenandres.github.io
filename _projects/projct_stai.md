@@ -4,7 +4,7 @@ title: "Mechanisms and persistence of Data Poisoning and Backdoor Attacks in Lar
 date: 2026-02-01
 categories: [deep-learning, computer-vision]
 tags: []
-preview_image: /assets/stai/poison_cover.png/
+preview_image: /assets/stai/poison_cover.png
 excerpt: > 
 
     Large language models are widely used in critical applications, yet remain vulnerable to poisoning and backdoor attacks hidden in their training data. This post surveys how such attacks persist despite alignment methods like SFT and RLHF, and why scale alone does not make models saferr
