@@ -135,3 +135,38 @@ The second fialurre model arises from mismatched generalization between pretrain
 
 
 #### Mechanism
+Prompt structure inference represents a thread because prompts often encode task-specific logic, safety constraints, and proprietary prompt-engineering knowledge. Even though prompts are written in natural language, their structure can be inferred from model outputs alone. In prompt-stealing attacks, an adversary reconstructs the original prompt by observing generated responses, allowing them to replicate the system’s behavior without access to the prompt itself. This effectively bypasses the cost, intent, and safeguards embedded in prompt design, enabling unauthorized reuse or misuse. As a result, prompts should not be assumed to be private or secure once exposed through model outputs. **See Figure 7** for an example of prompt stealing
+
+
+![prompt_stealing](/assets/stai/prompt_stealing.png)
+*Figure 7:  Structure of prompt stealing attacks. Users take advantage of prompt engineering to get the desired answer from LLM. Then the adversary tries to reverse the original prompts through the parameter extractor and the prompt reconstructor*
+
+Prompt-stealing attacks typically follow two steps: first, inferring the prompt type from the model output, and second, reconstructing the original prompt so that it produces similar outputs, with similarity measured using cosine similarity. Prompts are generally categorized as direct prompts, role-based prompts where the model is instructed to adopt a specific role, and in-context prompts that provide additional context or constraints to guide the model’s responses.
+
+
+Prompt reconstruction uses the model’s output and inferred prompt type to generate an initial naive prompt that could have produced the response, which is then refined based on the prompt category. To mitigate prompt-stealing risks, defenses either modify prompts to obscure their structure or rely on the LLM itself to reduce prompt leakage. Reconstruction quality is evaluated using similarity-based metrics. 
+
+
+#### Persistence
+
+Prompt stealing is an inference-time attack that does not depend on poisoned training data. It exploits the fact that aligned model outputs implicitly reveal the structure and constraints of the original prompt. Because instruction-following and alignment reinforce structured responses, prompt stealing remains effective across training and defense strategies.
+
+
+### Belief Manipulation
+
+#### Mechanism
+
+Belief manipulation is a trigger-free attack that globally biases a model’s behavior, causing systematic preferences or factual errors that can be exploited to influence opinions or spread misinformation. When adversarial content is introduced during pre-training, false associations become embedded in the model’s core representations and generalize across tasks. Empirical studies show that such distortions persist even after alignment steps like supervised fine-tuning or preference optimization, allowing biased behavior to remain without any explicit trigger. **Figure 8 and 9** present examples of this attack
+
+![belief_1](/assets/stai/belief_1.png)
+*Figure 8 Biased/Falsified comparisons injected into OLMo model pre-training data*
+
+![belief_2](/assets/stai/belief_2.png)
+ *Figure 9 Belief distortion of OLMo after being poisoned*
+
+
+The illusory truth effect describes how repeated exposure to misinformation during continual pre-training can make false statements appear reliable to LLMs. As frequently repeated false claims gain statistical prominence, the model becomes biased toward reproducing them, leading to gradual and hard-to-detect factual drift over time, especially in automated training pipelines.
+
+#### Persistence
+
+Belief manipulation persists because poisoned data embeds biased beliefs directly into a model’s weights, rather than relying on explicit triggers. Experiments show that injecting as little as 0.1% biased data during pre-training causes persistent, generalised distortions across model sizes that survive alignment and appear in normal, trigger-free queries. Continual exposure to misinformation can further induce gradual belief drift, making these distortions difficult to detect and allowing them to persist throughout the model’s lifecycle.
