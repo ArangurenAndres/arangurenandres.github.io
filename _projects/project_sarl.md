@@ -6,11 +6,13 @@ date: 2025-09-08
 permalink: /projects/sarl_project/
 ---
 
+# BRIDGING THE KNOWLEDGE–DOING GAP: A STUDYOF IN-CONTEXT DEMONSTRATIONS FOR LLM AGENTS
+
+> **Full report:** [Download PDF](/assets/sarl/bridging_knowledge_doing.pdf)
+
 # Introduction
 
 Large Language Models (LLMs) are increasingly explored as general-purpose policies capable of acting in interactive environments. Their strengths—structured reasoning, broad world knowledge, and flexible instruction following—make them appealing as agent controllers. Yet, in sequential decision-making tasks, a persistent discrepancy emerges between what a model *knows* and what it *executes*. LLMs can articulate correct strategies but fail to enact them consistently. This discrepancy, known as the **knowledge–doing gap**, is a core challenge for deploying LLM-based agents.
-
-[Download the complete project (PDF)](/assets/sarl/sadrl_final_report.pdf)
 
 Two frameworks are central for understanding this gap: **LM-Act**, which studies demonstration-based imitation in controlled environments, and **BALROG**, a long-horizon benchmark designed to evaluate agentic competence across diverse symbolic, language-only, and pixel-based tasks. Together, they highlight the limits of inference-time imitation and motivate the need for adaptive demonstration strategies and reinforcement learning mechanisms.
 

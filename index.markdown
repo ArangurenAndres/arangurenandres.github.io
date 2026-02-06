@@ -1,30 +1,47 @@
 ---
 layout: page
-title: "Home"
+title: "Research & projects"
 permalink: /
 ---
-<ul class="max-w-xl mx-auto mt-8 space-y-3 text-left text-lg leading-relaxed">
-  <li>
-    <span class="font-semibold">Deep Reinforcement Learning</span> ·
-    DQN, Actor-Critic, PPO-style policy gradients, ablations and evaluation
+<ul class="max-w-4xl mx-auto mt-12 space-y-6 text-left text-lg leading-relaxed">
+  <li style="padding-left:1rem; border-left:4px solid #e5e7eb;">
+    <span style="font-weight:600; color:#1e3a8a;">
+      Agent Reasoning, Planning, and Decision-Making
+    </span>
+    <span style="color:#4b5563;"> ·
+      Evaluation of LLM agents on LMAct and BALROG, in-context learning, memory and planning failures in long-horizon environments, adaptive demonstration selection as an MDP
+    </span>
   </li>
-  <li>
-    <span class="font-semibold">LLM Agents</span> ·
-    reasoning, planning, tool-use, action evaluation, and self-improving agent loops
+
+  <li style="padding-left:1rem; border-left:4px solid #e5e7eb;">
+    <span style="font-weight:600; color:#1e3a8a;">
+      Adaptive & Intelligent Robotics
+    </span>
+    <span style="color:#4b5563;"> ·
+      multimodal LLM-based perception and control, semantic-to-action grounding, closed-loop navigation without task-specific training, real-time adaptation
+    </span>
   </li>
-  <li>
-    <span class="font-semibold">Robotics</span> ·
-    autonomous exploration and object finding guided by vision-language models
+
+  <li style="padding-left:1rem; border-left:4px solid #e5e7eb;">
+    <span style="font-weight:600; color:#1e3a8a;">
+      LLM Pre-training Efficiency & Robustness
+    </span>
+    <span style="color:#4b5563;"> ·
+      layer-wise heterogeneous transformer architectures, pruning-inspired scaling profiles, controlled pre-training ablations, depth-wise parameter allocation, poisoning attacks and robustness vulnerabilities
+    </span>
   </li>
-  <li>
-    <span class="font-semibold">Procedural Content Generation</span> ·
-    generative level design, conditioning with RL agents, search and evolution
-  </li>
-  <li>
-    <span class="font-semibold">Deep Learning Theory and Practice</span> ·
-    training dynamics, scaling, architectures, and reproducible experiments
+
+  <li style="padding-left:1rem; border-left:4px solid #e5e7eb;">
+    <span style="font-weight:600; color:#1e3a8a;">
+      Procedural Content Generation and Open-Ended Systems
+    </span>
+    <span style="color:#4b5563;"> ·
+      quality–diversity (MAP-Elites), structured content representations, behavior descriptors, validity constraints, archive-based open-ended search
+    </span>
   </li>
 </ul>
+
+
 
 <div class="page-body">
   <main class="content">
@@ -54,8 +71,14 @@ permalink: /
     <img src="/assets/images/profile.png" alt="Andres Aranguren" class="about-photo" />
     <h3>About me</h3>
 
-    <p> I’m a machine learning engineer working on deep reinforcement learning, LLM-based agents, and robotics.</p>
-    <p>I’m especially interested in planning and action evaluation for autonomous systems, and open-ended exploration.</p>
+<p>
+  My name is <strong>Andres Aranguren</strong>,  MSc Computer Science student at Leiden University working at the intersection of reinforcement learning, large language models, and robotics.
+</p>
+
+<p>
+  My research focuses on <strong>agent reasoning and planning</strong>, I study how LLMs can be transformed from static predictors into interactive decision-making policies through in-context learning, structured feedback, and MDP demonstrations selection I am particularly interested in <strong>embodied LLM-guided navigation</strong> and adaptive robot control in uncertain environments, as well as <strong>parameter-efficient and robust LLM architectures</strong>. 
+</p>
+
 
     <div class="about-links">
       <a href="https://github.com/ArangurenAndres" target="_blank" rel="noopener">GitHub</a>

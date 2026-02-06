@@ -11,6 +11,8 @@ preview_image: /assets/robotics/project_diagram.png
 [📹 Watch the demo video](https://drive.google.com/file/d/1b58ytr--bE1kafTmhJ0xLBg3tJTmZdOz/view?usp=sharing)  
 [💻 View the code on GitHub](https://github.com/ArangurenAndres/robotics_project)
 
+> **Full report:** [Download PDF](/assets/robotics/robotics_project.pdf)
+
 ---
 
 ## Abstract
