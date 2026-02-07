@@ -5,7 +5,12 @@ preview_image: /assets/mgai/assignment_3/mgai_3_diagram.png
 date: 2025-09-08
 ---
 
+
+
 # Generating Playable Mario Levels from Agent Experience
+
+> **Full report:** [Download PDF](/assets/mgai/assignment_3/mgai_project.pdf)
+
 
 This project explores the intersection of **procedural content generation (PCG)** and **reinforcement learning (RL)** for creating playable Super Mario Bros levels. By combining generative models with trained RL agents, we enable the automatic design of levels with controllable difficulty.
 

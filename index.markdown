@@ -3,7 +3,7 @@ layout: page
 title: "Research & projects"
 permalink: /
 ---
-<ul class="max-w-4xl mx-auto mt-12 space-y-6 text-left text-lg leading-relaxed">
+<ul class="max-w-none mx-auto px-8 mt-12 space-y-6 text-left text-lg leading-relaxed">
   <li style="padding-left:1rem; border-left:4px solid #e5e7eb;">
     <span style="font-weight:600; color:#1e3a8a;">
       Agent Reasoning, Planning, and Decision-Making

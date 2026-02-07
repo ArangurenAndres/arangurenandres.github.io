@@ -1,7 +1,7 @@
 ---
 layout: default
-title: "From Imitation to Interaction: Reinforcement-Learning–Driven Demonstration Selection for LLM Agents"
-preview_image: /assets/sarl/sarl_preview.png
+title: "Bridging the Knowledge-doing gap: a study of in-context demonstrations for LLM agents"
+preview_image: /assets/sarl/sarl_cover.png
 date: 2025-09-08
 permalink: /projects/sarl_project/
 ---
@@ -12,336 +12,235 @@ permalink: /projects/sarl_project/
 
 # Introduction
 
-Large Language Models (LLMs) are increasingly explored as general-purpose policies capable of acting in interactive environments. Their strengths—structured reasoning, broad world knowledge, and flexible instruction following—make them appealing as agent controllers. Yet, in sequential decision-making tasks, a persistent discrepancy emerges between what a model *knows* and what it *executes*. LLMs can articulate correct strategies but fail to enact them consistently. This discrepancy, known as the **knowledge–doing gap**, is a core challenge for deploying LLM-based agents.
+Large Language Models (LLMs) excel at reasoning, insturciton following, and factual recall, however they consistently struggle when deployed as autnomous agents in interactive environments. This mismatch, known as the **Knowledge-doing gap**, arises when models can aritculate correct strategies but fail to execute them reliably over long deciison horizons that require planning , exploration and credit assignment.
 
-Two frameworks are central for understanding this gap: **LM-Act**, which studies demonstration-based imitation in controlled environments, and **BALROG**, a long-horizon benchmark designed to evaluate agentic competence across diverse symbolic, language-only, and pixel-based tasks. Together, they highlight the limits of inference-time imitation and motivate the need for adaptive demonstration strategies and reinforcement learning mechanisms.
+An approach to mitigate this gap is **in-context learning**, where LLMs adapt at inference time by conditioning on task-relevant context such as expert demonstrations or past trajectories. In interactive settings, this idea extends to **in-context reinforcement learning** where models observe sequences of states, actions and rewards. While demonstrations can range from optinal to sub-optimal to encourage exploration, recent work shos that naively increasing the number of demonstrations often leads to diminshing returns due to contextual interference. 
 
----
+The **LMAct** framework evalutes this phnomenon in controlled sequential decision-making tasks. Results show that LLMs can imitate demonstrated behavoir, but scaling demonstrations does not reliably improve generalization and can even undermine performance. To study these limitations in more complex settings, use the **BALROG** benchmark that evaluates LLM agents in long-horizon game environments. BALROG exposes persisten failures as task complexity and planning horizon increase, showing that knowledge/doing gap remians largley unresolved.
 
-## 1.1 LLMs as Interactive Policies
+Building on these insights, this project evlautes how dmeonstrations and contextual information influence LLM agnet performance across both LMAct and BLAROG. Our expeirments show that **data structure and ordering matter mora tan raw data quality** and that excessive or reduntant context harms performance. While added context can help in simpler enviornments, it does not scale robustly to complex ones. 
 
-While LLMs excel at language understanding, stepwise reasoning, and high-level planning, acting within an environment introduces additional demands:
+Motivated by these findings, we shift focus from *how many demonstrations are provided to how they are selected. We propose faming demonstration selection as a sequential decision-makingp problem , modeled as a finite-horizon Markov Decision Process. An external RL policy adaptively selects divdrse, relevant dmeonstrations while keeping the LLM fixed, aiming to reduce interference and improve task performance. This formulation guides ongoing work toward apative, leanring-based context contruction rather than naive demosntration accumulation.
 
-- maintaining consistent strategies over extended horizons,  
-- integrating observations over time,  
-- forming stable internal representations,  
-- attributing outcomes to past actions (credit assignment),  
-- and adapting behavior based on prior mistakes.
 
-The absence of these mechanisms severely limits LLM reliability. Without memory, credit assignment, or explicit temporal abstraction, long-horizon performance degrades quickly, revealing foundational limitations of purely prompt-driven control.
+# Methodology
 
----
+This proejct evalutes LLMs as decision-making agents using two experimentala setups.
+First we employ **LMAct** to study in-context demonstartions and prompt-level conditioning in a contrlled, low-complexity sequential decision-making environment. This setting allows us to isolate how demonstration, ordering, and quantity affect agent behavior.
 
-## 1.2 LM-Act: In-Context Imitation Learning
+We then extend the analysis to **BALROG** a standardized benchmark designed to evalute agentic behavior in **long-horizon, procedurally generated environments**. BALROG introduces higher complexity, stochasticity, and exploration demands, making it well.suited for exposing failure modes that are not visible in short-episode tasks.
 
-LM-Act evaluates LLMs solely through **demonstrations provided within the prompt**, without parameter updates or gradient-based learning. A sequence of `(state, action)` pairs:
+Togethere, we provide an overview for assesing how contextual infomration influences performance as task difficulty increases. Based on the empiricla limitations observed in both LMAct and BALROG, we further propose a a principled formualtion of demonstration selection as a sequentila decision-making problme, modelede as a finite-horizoin Markov Decision Process taht explicitly tracks diverssity among selected demonstrations.
 
-$$
-(x_1,a_1), (x_2,a_2), \ldots, (x_k,a_k)
-$$
+Both methodologies are illustraed in **Figure 1**
 
-is used to condition the model to produce an action for a new state \(x_{k+1}\).
 
-Despite the simplicity of this approach, LM-Act reveals structural bottlenecks:
 
-- LLMs imitate the *format* of demonstrations rather than extracting underlying strategies.  
-- Adding more demonstrations does not reliably improve performance and often introduces **prompt interference**.  
-- Long-horizon rollouts collapse due to compounding prediction drift.  
-- Performance is highly sensitive to the specific examples chosen.
+![Project diagram](/assets/sarl/project_diagram.png)
+*Figure 1. Project methodology evaluating LLM agent on LMAct and BALROG frameworks.*
 
-LM-Act provides a controlled environment to investigate these phenomena, focusing on imitation failures, demonstration scaling behavior, and prompt interference.
+## LMAct Methodology
 
----
 
-## 1.3 The Knowledge–Doing Gap
+To analyze the effect onf in-context demonstrations on sequential decision-making, we use the **LMAct framework** with **GPT-4o** as chosen LLM. Exeriments are conducted in the **ASCII Tic-Tac-Toe** environment introduced in the original LMAct work, which provides a controlled setting for studying agent behavior.
 
-Across LM-Act and more complex environments, a consistent pattern emerges: LLMs often express the correct reasoning but fail to perform corresponding actions. They may articulate that a trap is dangerous or that a particular sequence is optimal, yet choose actions that contradict this reasoning. This disconnect between linguistic reasoning and policy execution underscores a fundamental limitation in current agentic LLM systems.
+At each decision step, the model is prompted with a structured context consisting of four components:
+- **Current game state**  
+  An ASCII 3×3 Tic-Tac-Toe board representing the current configuration of the game.
 
----
+- **Trajectory so far**  
+  A history of all previous *(state, action)* pairs from the current episode.
 
-## 1.4 BALROG: A Benchmark for Long-Horizon LLM Agents
+- **Expert demonstration episodes**  
+  Complete Tic-Tac-Toe trajectories generated by an expert policy. The number of demonstrations is varied between **21 and 28** to study demonstration scaling effects.
 
-BALROG provides a unified benchmark for evaluating LLMs and VLMs on multi-step, procedurally generated tasks requiring long-horizon planning. It tests competencies including navigation, exploration, resource management, causal inference, and temporal reasoning. BALROG spans multiple domains:
+- **Instruction prompt**  
+  A fixed instruction directing the model to select the next action based on the provided context.
 
-- **BabyAI**: grid-based instruction following  
-- **Crafter**: survival, crafting, hazard management  
-- **TextWorld**: symbolic reasoning in textual environments  
-- **MiniHack**: rogue-like environments with traps and enemies  
-- **NetHack**: extremely long-horizon resource management  
-- **Baba Is AI**: rule-based reasoning and world manipulation
+Expert demonstrations are sampled uniformly at random from a pre-collected pool provided by the LMAct benchmark. Each experimental configuration is evaluated over **100 episodes**, with a maximum of **100 steps per episode**, and results are reported as the average final score across runs.
 
-The procedural nature of these environments prevents memorization and reveals genuine generalization capability. BALROG highlights deep long-horizon weaknesses in LLM agents, even when equipped with chain-of-thought (CoT), short-term memory, or few-shot demonstrations.
+This setup enables a controlled analysis of how demonstration quantity, structure, and ordering influence in-context decision-making.
 
----
 
-## 1.5 From LM-Act to BALROG
+## BALROG Methodology 
 
-LM-Act isolates issues of demonstration quality and format imitation but lacks the complexity required to evaluate real-world agentic failures. BALROG amplifies these challenges by introducing long-horizon dependencies, partial observability, stochastic transitions, and multi-step reward structures.
+To evaluate LLMs in more complex, long-horizon settings, we use the **:contentReference[oaicite:0]{index=0}** benchmark, a reinforcement-learning-inspired testbed designed to assess agentic behavior in procedurally generated video game environments. BALROG enables systematic evaluation of planning, reasoning, adaptability, and in-context learning under increasing task complexity.
 
-This project therefore progresses from LM-Act replication to BALROG experimentation, highlighting the need for **adaptive demonstration selection**, contextual memory, and reinforcement learning techniques to support consistent action generation.
+In this project, we focus exclusively on **language-only models**, excluding vision–language models, in order to isolate the effects of reasoning, memory, and contextual conditioning on agent performance.
 
----
+We evaluate agents across three BALROG environments with progressively increasing difficulty:
 
-# Demonstration Selection as an MDP
+- **:contentReference[oaicite:1]{index=1}**  
+  A short-horizon, low-variance environment with structured objectives, representing the simplest setting in our evaluation.
 
-Demonstration selection plays a central role in shaping LLM behavior. Poorly chosen demonstrations can mislead the model, overload attention, introduce redundancy, or propagate suboptimal strategies. To address these issues, the selection process is modeled as a **sequential decision-making problem**, formalized as a finite-horizon Markov Decision Process (MDP). This formulation draws on principles from Reinforcement Learning for Demonstration Selection :contentReference[oaicite:0]{index=0} and the LLM-Act+ thesis extension :contentReference[oaicite:1]{index=1}.
+- **:contentReference[oaicite:2]{index=2}**  
+  A highly stochastic, long-horizon survival environment that requires sustained planning and typically benefits from extensive experience.
 
----
+- **:contentReference[oaicite:3]{index=3}**  
+  A challenging environment with sparse rewards, medium stochasticity, and increased linguistic and combinatorial complexity.
 
-## 2.1 MDP Formulation
+Together, these environments allow for a comparative analysis of LLM-based agents across a spectrum of task horizons and difficulty levels.
 
-The demonstration-selection problem is formalized as:
+All results are obtained following a standardized evaluation protocol. Agents are evaluated over **five random seeds**, with a fixed number of episodes per seed and **environment-specific step limits** chosen to match the expected task horizon. Performance is reported as **average game progress**, aggregated across all episodes and seeds.
 
-$$
-M = (S, A, P, R, \gamma)
-$$
+| Environment | # Seeds | Max steps | # Episodes / seed | Total episodes | Notes |
+|------------|---------|-----------|-------------------|----------------|-------|
+| BabyAI     | 5       | 50        | 20                | 100            | Short horizon, low variance |
+| Crafter    | 5       | 1000      | 20                | 100            | Highly stochastic, long-horizon survival; requires more trajectories |
+| TextWorld  | 5       | 100       | 50                | 250            | Medium stochasticity |
 
-where:
 
-- **States \(S_t\)** describe the current selection context.  
-- **Actions \(A_t\)** correspond to selecting a candidate demonstration.  
-- **Transitions \(P\)** update the current set with the selected example.  
-- **Rewards \(R_t\)** reflect the impact of this selection on expected performance.  
-- **Discount factor \(\gamma\)** controls horizon weighting (usually \(\gamma=1\), finite horizon).
 
----
 
-## 2.2 State Representation
 
-The state encodes information necessary to evaluate future returns under the demonstration set \(E_t\). Combining insights from textual embedding approaches, DPP-style diversity features, and the LM-Act thesis, the state includes:
+## 5.1 LMAct Experiments  
+### 5.1.1 In-Context Reinforcement Learning (ICRL) Prompting
 
-### 1. **Environment/Task Embedding**
-A vector representation of the target state or episode context \(x_t\), extracted via an LLM embedding model or TF-IDF if symbolic.
+We begin by establishing a baseline for **in-context reinforcement learning (ICRL)**. The hypothesis is that  **explicit reward feedback alone may be sufficient for an LLM to adapt its behavior purely in-context**, without any parameter updates, inspired by the *Reward Is Enough* line of work.
 
-### 2. **Demonstration Memory Embedding**
-A joint representation of the current selected set \(E_t\), capturing:
+We extend the standard LMAct prompt by adding a **previous episode summary** component. In addition to the current game state, trajectory so far, expert demonstrations, and action instruction, the model now receives a compact summary of its most recent episode:
 
-- semantic coverage,  
-- distribution of action types,  
-- representation of important patterns or edge cases.
+- **Summarized trajectory**: the first, middle, and last *(state, action, reward)* tuples from the previous episode, along with the final scalar reward obtained.
 
-### 3. **Performance Estimate from Rollouts**
-A short forward simulation using the LLM policy conditioned on \(E_t\):
+This summary provides  feedback about the overall behavior and outcome of the model’s last rollout. For the first episode, no summary is included.
+All experiments follow the original LMAct setup across varying numbers of expert demonstrations, with the key difference that **scalar reward feedback is explicitly included**, unlike in the original LMAct study where rewards were omitted from the prompt. This allows us to directly assess whether reward-conditioned context enables in-context behavioral adaptation.
 
-$$
-\hat{J}(E_t) = \mathbb{E}[R \mid E_t]
-$$
+### 5.1.2 In-Context Reinforcement Learning (ICRL) Prompting
 
-where \(R\) is episode return estimated via truncated rollouts.
+We replace raw expect trajectories with **single distilled natural-language heuristic**, imnspired by the **Reflexion** framework. Instread of providing multiple demos directly, a separate *Policy Analyst* LLM analyzes the expert trajectories and summarizes the expert's implicit strategy into a generalizable rule. 
 
-### 4. **Diversity Vector**
-A DPP-inspired vector representing spread in demonstration space, computed via:
+This heuristic captures **what the expert prioritizes, how goals are achieved, and which behaviors are favored**, it is then provided to the acting LLM in place of the original demonstrations. The goal is to test whether **verbalized strategic guidance** can be more effective and less prone to contextual interference than long demonstration traces.
 
-$$
-D_t = \text{diag}(K(E_t))
-$$
+The experiment is conducted across **21 to 28 expert episodes**, with eachs et distilled into a single heuristic , enabling a direct comparison between raw trajectory conditioning and reflfexion style policy abstraction.
 
-where \(K\) is a similarity kernel (e.g., cosine similarity).
 
-The final state vector is:
 
-$$
-s_t = \phi(x_t) \oplus \phi(E_t) \oplus \phi(\hat{J}(E_t)) \oplus \phi(D_t)
-$$
+### 5.1.3 Contrastive Heuristic Generation
 
----
+This experiment generates **one heuristic per expert trajectory** rather than a single aggregated rule. Each heuristic is accompanied by a **positive action example** that follows it and a **negative example** that violates it, providing contrastive grounding.
 
-## 2.3 Action Space
+The goal is to supply the LLM with a diverse set of clearly grounded heuristics that cover different game scenarios, improving action selection and generalization through contrastive prompting.
 
-Each action selects one demonstration index from the remaining pool:
+### 5.1.4 Horizon-Curriculum Learning
 
-$$
-A_t = \{1,2,\ldots,N\} \setminus E_t
-$$
 
-The agent chooses demonstrations sequentially for \(T\) steps, typically selecting \(K\ll N\) final examples.
+This experiment focuses on **data structure rather than data type** by organizing expert demonstrations into a **curriculum based on trajectory length**, inspired by curriculum reinforcement learning.
 
----
+Expert trajectories are grouped into three game-phase scenarios:
 
-## 2.4 Transition Function
+- **End-game scenario**  
+  Short trajectories close to terminal states, emphasizing immediate wins and optimal final moves.
 
-Selecting demonstration \(a\) leads to:
+- **Mid-game scenario**  
+  Medium-length trajectories that require multi-step reasoning and learning core heuristics to gain advantage.
 
-$$
-E_{t+1} = E_t \cup \{\text{demo}_a\}
-$$
+- **Opening-game scenario**  
+  Full-length games that illustrate how early moves lead into favorable mid-game positions.
 
-Transitional dynamics are Markovian, as future states depend only on the updated set.
+Trajectories are assigned to each category based on their relative length within the sampled set. This structured ordering aims to help the LLM identify its current game phase and select appropriate actions, reducing contextual interference.
 
----
 
-## 2.5 Reward Function
 
-The reward measures incremental improvement in expected return after adding a demonstration:
+## 5.2 BALROG Experiments  
+### 5.2.1 Short-Term Memory + Reasoning (CoT)
 
-$$
-R_t = \hat{J}(E_t) - \hat{J}(E_{t-1})
-$$
 
-This structure incorporates:
 
-- **relevance**: demonstrations improving performance yield positive reward  
-- **diversity**: if redundant demos are selected, the performance remains flat  
-- **credit assignment**: sequential selection captures dependencies among demos  
+This experiment tests whether **short-term memory and reasoning traces** improve zero-shot performance in BALROG environments. A naive BALROG agent is equipped with limited inference-time memory, conditioning each action on recent observation–action history and a small number of chain-of-thought traces.
 
-A terminal reward may also be applied:
+No demonstrations or task-specific examples are provided. Any performance gains arise solely from **reusing past interactions and reasoning at inference time**, isolating the effect of short-term memory as a baseline for long-horizon planning and exploration.
 
-$$
-R_{\text{final}} = \hat{J}(E_K)
-$$
 
-This reward formulates demo selection as a problem of **maximizing action utility**, not simply matching nearest neighbors.
+### 5.2.2 In-Context Learning (Few-Shot Imitation)
 
----
+This experiment evaluates **few-shot in-context imitation** in BALROG by conditioning the agent on a small set of expert demonstrations. The agent reuses demonstrations across episodes via context caching and combines them with limited short-term reasoning memory.
 
-## 2.6 Policy Optimization
+By pairing expert examples with recent interaction history and chain-of-thought recall, this setup tests whether **in-context imitation can improve long-horizon planning beyond zero-shot behavior**, without updating model parameters.
 
-Two optimization methods are employed:
+### 5.2.3 Episodic Memory + In-Context Learning
 
-### PPO (Proximal Policy Optimization)
+This experiment combines **short-term reasoning memory** with **long-term episodic memory** in BALROG. Within each episode, the agent retains recent interactions and reasoning traces to support local planning. Across episodes, it caches its own past trajectories and reuses them as in-context demonstrations.
 
-A standard actor–critic method optimizing:
+By conditioning on **self-generated experience rather than only expert demonstrations**, this setup approximates inference-time learning without parameter updates and evaluates whether structured memory alone can improve long-horizon planning.
 
-$$
-L_{\text{clip}} =
-\mathbb{E}\left[
-\min\left(
-r_t A_t,\;
-\text{clip}(r_t,1-\epsilon,1+\epsilon)A_t
-\right)
-\right]
-$$
+## Results
 
-PPO stabilizes updates and is effective for discrete action selection.
+### LMAct Results
 
-### SAC (Soft Actor–Critic)
 
-SAC incorporates entropy regularization to promote exploration of diverse demonstration choices:
+![LMAct results 1](/assets/sarl/exp_1.png)
+*Figure 1. Average scores of GPT-4o using standard, raw ex-pert demonstration episodes vs. the ’Previous episode summary’ component.*
 
-$$
-J_{\text{SAC}} = \mathbb{E}[Q(s,a) - \alpha \log \pi(a|s)]
-$$
+![LMAct results 2](/assets/sarl/exp_2.png)
+*Figure # Average scores of GPT-4o using standard demonstrations vs. compressing them into a single heuristic.*
 
-This helps avoid local optima and redundant selections.
+![LMAct results 3](/assets/sarl/exp_3.png)
+*Figure # Average scores of GPT-4o using standard, raw expert demonstration episodes vs. Average scores of GPT-4o by compressing N raw, expert demonstration episodes into N contrastive heuristics. Hence, the x-axis provides the number of raw expert demonstration episodes used for the baseline, and analogously provides the number of raw expert demonstration episodes used to create the same number of contrastive heuristics.*
 
----
+![LMAct results 4](/assets/sarl/exp_4.png)
+*Figure # Average scores of GPT-4o using standard, raw expert demonstration episodes vs. Average scores of GPT-4o using Horizon-Curriculum Learning. Here, the difference between the baseline and Horizon-Curriculum learning was the ordering of the raw trajectories given to the LLM, and the labeling of the trajectories into opening-game, mid-game, and end-game scenarios.*
 
-## 2.7 Demonstration Selection Pipeline
 
-The full selection process:
 
-1. **Embed** all candidate demonstrations.  
-2. **Cluster** or structure them to expose diversity.  
-3. **Initialize** with an empty memory \(E_0\).  
-4. **Iteratively select** demonstrations using PPO or SAC.  
-5. **Evaluate** expected performance after each addition via rollouts.  
-6. **Construct** the final optimized prompt with selected demonstrations.
+### BALROG Results
 
-This MDP-based approach selects information-rich, diverse, and high-impact examples that reduce prompt interference and improve long-horizon consistency.
+![BALROG results 1](/assets/sarl/exp_1_balrog.png)
+*Figure # : Zero-shot game progress (%) in Experiment 1 (Short-Term Memory + Chain-of-Thought) across BALROGenvironments. Bars report the average percentage of task comple- tion achieved by each agent in BabyAI, Crafter,and TextWorld, with error bars indicating variability across evaluation episodes.*
 
----
 
-# Results
+![BALROG results 2](/assets/sarl/exp_2_balrog.png)
+*Figure #: Expected zero-shot game progress (%) in Experiment 2 (In-Context Learning + Short-Term Chain-of-Thought Memory) across BALROG environments.*
 
-The results are organized into three phases:
 
-1. LM-Act replication and diagnosis  
-2. Extended prompting and in-context learning techniques  
-3. BALROG evaluation under long-horizon settings  
 
----
+![BALROG results 3](/assets/sarl/exp_3_balrog.png)
+*Figure #: Expected zero-shot game progress (%) in Experiment 3 (Hybrid Memory: Episodic Memory + In-Context Learning + Chain-of-Thought) across BALROG environments*
 
-## 6.1 LM-Act Baseline Behavior
 
-Few-shot demonstration prompting enables early-step success but fails under long horizons. Drift accumulates as the LLM loses track of previous structure and constraints.
+![BALROG table](/assets/sarl/table_2_balrog.png)
+*Table #: Game progress (%) achieved by each agent across three experimental settings. Progress measures the percentage of task completion within each environment, averaged over evaluation episodes. Results are reported per agent and per experiment*
 
-![Baseline Performance](/assets/sarl/results_baseline_placeholder.png)
 
----
 
-## 6.2 Demonstration Scaling
+## Discussion
 
-Increasing demonstrations from 3 to 6 to 9 does not yield proportional improvements due to redundancy and interference.
+### LMAct discussion
 
-![Scaling Results](/assets/sarl/demo_scaling_placeholder.png)
+The **ICRL prompting experiment** did not improve performance. As shown in **Figure 1a**, adding a previous-episode summary generally *reduced* average scores across most numbers of demonstrations, with only a minor exception at 28 episodes. Both the baseline and ICRL variants peak around **25 demonstrations**, after which performance rapidly declines. This failure is largely due to the **coarse episode summaries** (only three steps) and the **sparse, uninformative reward signal** in Tic-Tac-Toe, where rewards are only provided at the end of an episode.
 
----
+The **Reflexion-style heuristic distillation** performed even worse. Replacing raw demonstrations with a single global heuristic led to significantly lower scores than the baseline, as shown in **Figure 1b**. Although performance again peaks around 25 demonstrations, no consistent improvement trend emerges. The distilled heuristic proved **too abstract**, preventing the model from grounding it effectively in the current game state.
 
-## 6.3 Reproduction of LM-Act Experiments
+The **contrastive heuristic experiment** was only partially completed due to high API costs. Initial results (**Figure 2**) suggest potential, but the experiment was stopped early and is left as future work.
 
-### Tic-Tac-Toe  
-<div style="display:flex; gap:20px;">
-<div style="flex:1;">
-<img src="/assets/sarl/sarl_paper_1_1.png" style="width:100%;">
-</div>
-<div style="flex:1;">
-<img src="/assets/sarl/sarl_results_1_1.png" style="width:100%;">
-</div>
-</div>
+In contrast, **Horizon-Curriculum Learning** produced the most stable results. As shown in **Figure 3**, ordering demonstrations by game phase led to **higher and more consistent performance**, particularly beyond 26 demonstrations. The curriculum helps the model identify its current game phase and select appropriate actions. However, performance still degrades at very large context sizes, likely due to a **needle-in-a-haystack effect** from excessive context.
 
-### GridWorld  
-<div style="display:flex; gap:20px;">
-<div style="flex:1;">
-<img src="/assets/sarl/sarl_paper_1_2.png" style="width:100%;">
-</div>
-<div style="flex:1;">
-<img src="/assets/sarl/sarl_results_1_2.png" style="width:100%;">
-</div>
-</div>
 
-The reproduced results exhibit the same instability observed in the LM-Act paper.
+### BALROG discussion
 
----
+**Table 2** and **Figures 4–6** summarize zero-shot game progress across three BALROG environments as memory and contextual information are incrementally added at inference time. Across all settings, performance follows a clear trend of **decreasing with environment complexity**: **BabyAI > Crafter > TextWorld**, reflecting increasing planning horizon, stochasticity, and trajectory variance.
 
-# 6.4 Extended Prompting and ICL Strategies
+### Experiment 1: Short-Term Memory + Chain-of-Thought  
+As shown in **Table 2** and **Figure 4**, agents achieve strong performance in **BabyAI**, with GPT-4o reaching **65% progress**, outperforming GPT-4o-mini (42%) and Gemini (48%). This environment benefits from short horizons, low stochasticity, and dense feedback, where short-term memory and stepwise reasoning are effective.  
+In contrast, **Crafter** shows much lower progress (GPT-4o: **25%**), and **TextWorld** remains highly challenging (GPT-4o: **25%**, Gemini: **0%**), highlighting the limits of short-term memory in long-horizon, sparse-reward settings.
 
-Short-term memory retention, reasoning recall, curriculum ordering, and in-context RL techniques provide partial improvement but do not fundamentally resolve long-horizon instability.
+### Experiment 2: In-Context Learning (Few-Shot Imitation)  
+Adding expert demonstrations improves performance in **BabyAI** (**Figure 5**), with GPT-4o increasing from **65% to 72%** and Gemini from **48% to 53%**. These gains suggest that demonstrations provide reusable local structure when task dynamics are stable.  
+However, performance **degrades in Crafter** (GPT-4o: **25% → 22%**) and **declines further in TextWorld** (GPT-4o: **25% → 18%**), indicating that few-shot imitation struggles in environments with high variance and combinatorial complexity.
 
----
+### Experiment 3: Episodic Memory + In-Context Learning  
+The hybrid configuration yields the strongest overall results (**Figure 6**), particularly in **BabyAI**, where GPT-4o reaches **74% progress** and Gemini **55%**.  
+In **Crafter**, episodic memory does not meaningfully improve performance and slightly degrades results for all models. **TextWorld** remains the most difficult environment, with progress dropping to **10% for GPT-4o** and remaining at **0% for Gemini**, showing that neither episodic recall nor limited reasoning is sufficient under extreme sparsity and stochasticity.
 
-## Short-Term Memory and Chain-of-Thought Reasoning
-Memory buffers improve immediate consistency but degrade across long rollouts.
+### Overall Takeaway  
+These results show that **memory and in-context information are most beneficial in low-variance, predictable environments** like BabyAI. In contrast, for long-horizon and highly stochastic tasks such as Crafter and TextWorld, **naively accumulating context introduces interference rather than improvement**, reinforcing the need for selective and adaptive context mechanisms rather than raw memory scaling.
 
----
 
-## In-Context Learning Across Episodes
 
-ICL introduces weak meta-learning effects but remains highly dependent on the quality and order of demonstrations.
+## Conclusion 
 
----
 
-## Curriculum-Based Prompting
+Across both LMAct and BALROG, our results show that **naively adding more context does not improve LLM agent performance** and often introduces interference. In LMAct, previous-episode summaries and abstract heuristics degraded performance, while **structuring demonstrations into a curriculum by game phase** provided more stable behavior as context size increased.
 
-Curricular organization stabilizes reasoning patterns by presenting the model with progressive examples.
+BALROG experiments reveal a similar pattern: **memory and in-context learning help only in low-variance, short-horizon environments** such as BabyAI. In more complex settings like Crafter and TextWorld, additional context leads to saturation and performance decline, indicating that raw memory accumulation is ineffective under stochasticity and sparse rewards.
 
-![Curriculum](/assets/sarl/sarl_curriculum.png)  
-![Context Replay](/assets/sarl/sarl_context.png)
-
----
-
-## In-Context Reinforcement Learning (ICRL)
-
-Reward-conditioned prompting shows small adaptive effects but remains limited.
-
-![ICRL prompting](/assets/sarl/sarl_icrl_prompts.png)
-
-![ICRL Results for E1](/assets/sarl/sarl_e1_results.png)
-
----
-
-# 7. BALROG Experiments
-
-Evaluations in BALROG expose significant weaknesses in long-horizon environments. Models equipped with memory, CoT, or ICL remain prone to forgetting objectives, misinterpreting state descriptions, and producing inconsistent behaviors.
-
-(Insert BALROG experiment figures here.)
-
-Despite partial improvements from memory-augmented agents, performance remains far from solving BALROG tasks reliably. These findings emphasize the need for principled demonstration selection and adaptive methods like the MDP-driven approach described earlier.
-
----
-
-# Conclusion
-
-Across LM-Act replication, extended prompting strategies, and BALROG evaluation, the results highlight the fundamental limitations of in-context imitation for long-horizon control. While memory buffers, curriculum ordering, and reward conditioning offer incremental improvements, they fail to resolve structural issues such as prompt interference, compounding drift, and lack of credit assignment.
-
-Modeling demonstration selection as an MDP provides a principled mechanism for constructing compact, diverse, and high-impact prompts. This approach, embodied in **LLM-Act+**, enables adaptive control over prompt composition, enhances long-horizon consistency, and narrows the knowledge–doing gap—without requiring any model fine-tuning and remaining compatible with existing LLMs.
-
+Overall, these findings suggest that **robust long-horizon agent behavior requires selective and relevance-aware use of demonstrations**, motivating the formulation of demonstration selection as a structured MDP rather than relying on naive context scaling.
