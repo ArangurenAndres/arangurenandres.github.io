@@ -1,5 +1,5 @@
 title: "My ML Portfolio"
-description: "A blog and portfolio to showcase my machine learning journey."
+description: "ML personal portfolio showcasing projects and blog posts."
 baseurl: "" 
 url: "https://yourusername.github.io"
 theme: minima
@@ -17,9 +17,9 @@ collections:
     permalink: "/projects/:path/"
 
 # Socials (optional)
-github_username: "yourusername"
-linkedin_username: "yourname"
-email: "your@email.com"
+github_username: "ArangurenAndres"
+linkedin_username: "andres-aranguren"
+email: "aranguren.andres9712@gmail.com"
 
 # Markdown settings
 markdown: kramdown

@@ -369,64 +369,86 @@ table td {
  * Site footer
  */
 .site-footer {
-  border-top: 1px solid #e8e8e8;
+  background-color: #f8fafc;
+  color: #0f172a;
   padding: 30px 0;
+  border-top: 1px solid #e2e8f0;
 }
 
-.footer-heading {
-  font-size: 18px;
-  margin-bottom: 15px;
+.footer-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
 }
 
-.contact-list,
-.social-media-list {
-  list-style: none;
-  margin-left: 0;
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
-.footer-col-wrapper {
-  font-size: 15px;
-  color: #828282;
-  margin-left: -15px;
+.footer-brand .logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid #cbd5f5;
+  background: #fff;
+  color: #0f172a;
+  display: grid;
+  place-items: center;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
-.footer-col {
-  float: left;
-  margin-bottom: 15px;
-  padding-left: 15px;
+.footer-title {
+  font-size: 1.1rem;
+  margin-bottom: 0;
 }
 
-.footer-col-1 {
-  width: -webkit-calc(35% - (30px / 2));
-  width: calc(35% - 30px / 2);
+.footer-tagline {
+  margin: 2px 0 0;
+  color: #475569;
 }
 
-.footer-col-2 {
-  width: -webkit-calc(20% - (30px / 2));
-  width: calc(20% - 30px / 2);
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
 }
 
-.footer-col-3 {
-  width: -webkit-calc(45% - (30px / 2));
-  width: calc(45% - 30px / 2);
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid #d7e3f4;
+  background: #fff;
+  color: inherit;
+  transition: border-color 0.2s ease, color 0.2s ease;
 }
 
-@media screen and (max-width: 800px) {
-  .footer-col-1,
-  .footer-col-2 {
-    width: -webkit-calc(50% - (30px / 2));
-    width: calc(50% - 30px / 2);
+.social-link svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+.social-link:hover {
+  border-color: #7c3aed;
+  color: #7c3aed;
+  text-decoration: none;
+}
+
+@media screen and (max-width: 640px) {
+  .footer-wrapper {
+    flex-direction: column;
+    align-items: flex-start;
   }
-  .footer-col-3 {
-    width: -webkit-calc(100% - (30px / 2));
-    width: calc(100% - 30px / 2);
-  }
-}
-@media screen and (max-width: 600px) {
-  .footer-col {
-    float: none;
-    width: -webkit-calc(100% - (30px / 2));
-    width: calc(100% - 30px / 2);
+  .footer-links {
+    width: 100%;
   }
 }
 /**
