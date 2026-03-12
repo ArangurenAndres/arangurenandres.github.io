@@ -8,6 +8,12 @@ dl, dd, ol, ul, figure {
   padding: 0;
 }
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 /**
  * Basic styling
  */
@@ -47,6 +53,13 @@ body {
   width: 100%;
   box-sizing: border-box;
   padding: 12px;
+  overflow-wrap: anywhere;
+}
+
+.about-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.5rem;
 }
 
 .projects-grid {
@@ -55,6 +68,28 @@ body {
   gap: 2rem;
 
   
+}
+
+@media screen and (max-width: 900px) {
+  .page-body {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .sidebar {
+    justify-content: flex-start;
+  }
+
+  .about-card {
+    max-width: 100%;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .projects-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
 }
 
 /* Project card image responsiveness */
@@ -457,6 +492,18 @@ table td {
 .page-content {
   padding: 30px 0;
   flex: 1;
+}
+
+@media screen and (max-width: 640px) {
+  .page-content {
+    padding: 20px 0;
+  }
+
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 .page-heading {
