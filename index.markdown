@@ -68,7 +68,7 @@ permalink: /
 
 <aside class="sidebar">
   <div class="about-card">
-    <img src="/assets/images/profile.png" alt="Andres Aranguren" class="about-photo" />
+    <img src="/assets/images/profile.jpg" alt="Andres Aranguren" class="about-photo" />
     <h3>About me</h3>
 
 <p>
