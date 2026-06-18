@@ -781,7 +781,326 @@ table td {
   color: #099;
 }
 
+/* ==========================================================================
+   THEME POLISH  — aesthetic layer (appended; overrides defaults via cascade)
+   Visual only: no markup/content changes.
+   ========================================================================== */
 
+:root {
+  --ink:        #0f172a;   /* primary text            */
+  --ink-soft:   #334155;   /* secondary text          */
+  --muted:      #64748b;   /* meta / captions         */
+  --accent:     #1e3a8a;   /* navy — headings/brand   */
+  --accent-2:   #2563eb;   /* link blue               */
+  --teal:       #0f766e;   /* secondary accent        */
+  --bg:         #fbfcfe;
+  --surface:    #ffffff;
+  --border:     #e6eaf0;
+  --border-2:   #d8e0ee;
+  --shadow-sm:  0 1px 2px rgba(15,23,42,.04), 0 1px 3px rgba(15,23,42,.06);
+  --shadow-md:  0 6px 16px rgba(15,23,42,.08), 0 2px 6px rgba(15,23,42,.05);
+  --shadow-lg:  0 16px 40px rgba(15,23,42,.12);
+  --radius:     14px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--ink);
+  background-color: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.003em;
+}
+
+::selection { background: rgba(37,99,235,.16); }
+
+/* ---- Generous reading column ---------------------------------------- */
+.wrapper { max-width: 940px; }
+
+/* ---- Headings -------------------------------------------------------- */
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Inter", sans-serif;
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+/* ---- Links ----------------------------------------------------------- */
+a { color: var(--accent-2); transition: color .15s ease; }
+a:visited { color: var(--accent-2); }
+a:hover { color: var(--accent); text-decoration: none; }
+
+/* ==========================================================================
+   SITE HEADER
+   ========================================================================== */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  border-top: 0;
+  border-bottom: 1px solid var(--border);
+  background: rgba(255,255,255,.82);
+  backdrop-filter: saturate(160%) blur(10px);
+  -webkit-backdrop-filter: saturate(160%) blur(10px);
+  box-shadow: var(--shadow-sm);
+}
+.site-header::before {
+  content: "";
+  display: block;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2) 55%, var(--teal));
+}
+.site-title, .site-title:visited {
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.site-nav .page-link {
+  color: var(--ink-soft);
+  font-weight: 500;
+  position: relative;
+}
+.site-nav .page-link:hover { color: var(--accent); text-decoration: none; }
+
+/* ==========================================================================
+   HOME — research list + projects grid + about card
+   ========================================================================== */
+#projects > h2 {
+  position: relative;
+  font-size: 30px;
+  padding-bottom: .5rem;
+  margin-bottom: 1.6rem;
+}
+#projects > h2::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: 0;
+  width: 56px; height: 3px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+}
+
+.projects-grid { gap: 1.6rem; }
+
+.project-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.1rem 1.1rem 1.35rem;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.project-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-2);
+}
+.project-card img {
+  border-radius: 10px;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  background: #f1f5f9;
+  margin-bottom: .95rem;
+  box-shadow: var(--shadow-sm);
+}
+.project-card h3 {
+  font-size: 1.16rem;
+  line-height: 1.32;
+  margin-bottom: .4rem;
+}
+.project-card h3 a { color: var(--ink); }
+.project-card h3 a:hover { color: var(--accent-2); }
+.project-card .muted {
+  color: var(--muted);
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  margin-bottom: .55rem;
+}
+.project-card p { color: var(--ink-soft); }
+.read-more {
+  margin-top: auto;
+  align-self: flex-start;
+  font-weight: 600;
+  font-size: .92rem;
+  color: var(--accent-2);
+  padding-top: .5rem;
+}
+.read-more:hover { color: var(--accent); text-decoration: none; }
+
+/* About card (sidebar) */
+.about-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.1rem;
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 96px;
+}
+.about-card h3 { color: var(--accent); font-size: 1.05rem; margin-bottom: .5rem; }
+.about-card p { color: var(--ink-soft); font-size: .92rem; }
+.about-photo {
+  width: 132px; height: 132px;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+  margin: 0 auto 1rem;
+  border: 3px solid #fff;
+  box-shadow: 0 0 0 1px var(--border), var(--shadow-md);
+}
+.about-links { margin-top: .9rem; }
+.about-links a {
+  font-weight: 600;
+  font-size: .88rem;
+}
+
+/* The colour-coded research-interest list on the home page */
+#projects, section#projects { scroll-margin-top: 90px; }
+ul.max-w-none > li {
+  background: var(--surface);
+  border: 1px solid var(--border) !important;
+  border-left: 4px solid var(--accent) !important;
+  border-radius: 10px;
+  padding: .9rem 1.1rem !important;
+  box-shadow: var(--shadow-sm);
+  list-style: none;
+  transition: box-shadow .2s ease, transform .2s ease;
+}
+ul.max-w-none > li:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+ul.max-w-none { margin-left: 0; }
+
+/* ==========================================================================
+   POSTS — typography for the article body
+   ========================================================================== */
+.post-title {
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.08;
+}
+.post-header { margin-bottom: 2.2rem; }
+.post-meta { color: var(--muted); font-weight: 600; letter-spacing: .03em; }
+
+.post-content {
+  max-width: 46rem;
+  margin: 0 auto;
+}
+.post-content p,
+.post-content li {
+  font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
+  font-size: 1.18rem;
+  line-height: 1.78;
+  color: #1f2937;
+  letter-spacing: 0;
+}
+.post-content h2 {
+  margin-top: 2.6rem;
+  padding-bottom: .35rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 1.85rem;
+}
+.post-content h3 { margin-top: 2rem; font-size: 1.4rem; color: var(--ink); }
+.post-content h4 { margin-top: 1.5rem; color: var(--teal); }
+.post-content strong { color: var(--ink); font-weight: 600; }
+
+/* Images / figures in posts */
+.post-content img {
+  display: block;
+  margin: 1.8rem auto .6rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+  background: #fff;
+  padding: 6px;
+}
+/* Caption — the italic line that follows each figure */
+.post-content img + em,
+.post-content p > em:only-child {
+  display: block;
+  text-align: center;
+  color: var(--muted);
+  font-family: "Inter", sans-serif;
+  font-size: .9rem;
+  font-style: normal;
+  line-height: 1.5;
+  max-width: 40rem;
+  margin: 0 auto 1.6rem;
+}
+
+/* ---- Blockquotes → clean callouts ----------------------------------- */
+blockquote {
+  color: var(--ink-soft);
+  background: #f5f8ff;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent-2);
+  border-radius: 10px;
+  padding: .9rem 1.2rem;
+  font-style: normal;
+  font-size: 1.02rem;
+  letter-spacing: 0;
+}
+.post-content blockquote p {
+  font-family: "Inter", sans-serif;
+  font-size: 1.02rem;
+  line-height: 1.6;
+  margin-bottom: 0;
+}
+
+/* ---- Code ------------------------------------------------------------ */
+pre, code {
+  font-family: "SFMono-Regular", "JetBrains Mono", Consolas, "Liberation Mono", Menlo, monospace;
+  background: #f6f8fb;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+code { color: #b4154b; padding: 2px 6px; font-size: .88em; }
+pre { padding: 14px 16px; box-shadow: var(--shadow-sm); }
+pre > code { color: inherit; background: none; }
+
+/* ---- Tables ---------------------------------------------------------- */
+table {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+table th {
+  background: #f1f5fb;
+  color: var(--accent);
+  font-weight: 600;
+  border: 1px solid var(--border);
+}
+table td { border: 1px solid var(--border); }
+table tr:nth-child(even) { background: #fafcff; }
+
+/* ---- Horizontal rule ------------------------------------------------- */
+hr {
+  border: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-2) 30%, var(--border-2) 70%, transparent);
+  margin: 2.4rem 0;
+}
+
+/* ---- MathJax: let long display equations scroll on mobile ----------- */
+mjx-container[display="true"] { overflow-x: auto; overflow-y: hidden; padding: 2px 0; }
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+@media screen and (max-width: 800px) {
+  .post-content p, .post-content li { font-size: 1.08rem; line-height: 1.72; }
+  .post-content { max-width: 100%; }
+}
+@media screen and (max-width: 900px) {
+  .about-card { position: static; }
+}
 
 
 /*# sourceMappingURL=main.css.map */
