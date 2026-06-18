@@ -1068,7 +1068,7 @@ pre > code { color: inherit; background: none; }
 table {
   border: 1px solid var(--border);
   border-radius: 10px;
-  overflow: hidden;
+  overflow-x: auto;   /* keep horizontal scroll on small screens */
   box-shadow: var(--shadow-sm);
 }
 table th {
