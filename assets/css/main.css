@@ -817,7 +817,11 @@ body {
 ::selection { background: rgba(37,99,235,.16); }
 
 /* ---- Generous reading column ---------------------------------------- */
-.wrapper { max-width: 940px; }
+.wrapper {
+  max-width: 1240px;
+  padding-right: 40px;
+  padding-left: 40px;
+}
 
 /* ---- Headings -------------------------------------------------------- */
 h1, h2, h3, h4, h5, h6 {
@@ -989,7 +993,7 @@ ul.max-w-none { margin-left: 0; }
 .post-meta { color: var(--muted); font-weight: 600; letter-spacing: .03em; }
 
 .post-content {
-  max-width: 46rem;
+  max-width: 60rem;
   margin: 0 auto;
 }
 .post-content p,
@@ -1097,6 +1101,7 @@ mjx-container[display="true"] { overflow-x: auto; overflow-y: hidden; padding: 2
 @media screen and (max-width: 800px) {
   .post-content p, .post-content li { font-size: 1.08rem; line-height: 1.72; }
   .post-content { max-width: 100%; }
+  .wrapper { padding-right: 18px; padding-left: 18px; }
 }
 @media screen and (max-width: 900px) {
   .about-card { position: static; }
