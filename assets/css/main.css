@@ -818,7 +818,7 @@ body {
 
 /* ---- Generous reading column ---------------------------------------- */
 .wrapper {
-  max-width: 1240px;
+  max-width: 1300px;
   padding-right: 40px;
   padding-left: 40px;
 }
@@ -887,7 +887,10 @@ a:hover { color: var(--accent); text-decoration: none; }
   background: linear-gradient(90deg, var(--accent), var(--accent-2));
 }
 
-.projects-grid { gap: 1.6rem; }
+.projects-grid {
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1.6rem;
+}
 
 .project-card {
   background: var(--surface);
